@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\course;
+use App\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        $courses = Course::latest()->paginate(5);
+  
+        return view('courses.index',compact('courses'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -25,7 +28,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return view('courses.create');
     }
 
     /**
