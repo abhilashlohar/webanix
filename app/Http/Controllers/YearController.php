@@ -14,7 +14,7 @@ class YearController extends Controller
      */
     public function index()
     {
-        $years = Year::latest()->paginate(5);
+        $years = Year::latest()->where('deleted', false)->paginate(5);
   
         return view('years.index',compact('years'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -78,7 +78,7 @@ class YearController extends Controller
      */
     public function update(Request $request, Year $year)
     {
-        $request->validate(Year::rules(), Year::messages());
+        $request->validate(Year::rules($year->id), Year::messages());
   
         $year->update($request->all());
   

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Webpatser\Uuid\Uuid;
+use Illuminate\Validation\Rule;
 
 class Year extends Model
 {
@@ -27,7 +28,12 @@ class Year extends Model
     public static function rules($id = '') 
     {
       return [
-          'name' => ['required', 'unique:years'],
+          'name' => [
+            'required', 
+            Rule::unique('years')->where(function ($query) {
+                return $query->where('deleted', false);
+            })->ignore($id)
+          ],
       ];
     }
 
