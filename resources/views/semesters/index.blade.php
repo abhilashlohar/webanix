@@ -10,9 +10,9 @@
     @endif
     <div class="card">
         <div class="card-header">
-          <span class="float-left">Years</span>
+          <span class="float-left">Semesters</span>
           <div class="float-right">
-              <a href="{{ route('years.create') }}"> Add New</a>
+              <a href="{{ route('semesters.create') }}"> Add New</a>
           </div>
         </div>
         <div class="card-body">
@@ -21,13 +21,13 @@
                     <th>Name</th>
                     <th width="280px">Action</th>
                 </tr>
-                @foreach ($years as $year)
+                @foreach ($semesters as $semester)
                 <tr>
-                    <td>{{ $year->name }}</td>
+                    <td>{{ $semester->name }}</td>
                     <td>
-                        <form action="{{ route('years.destroy',$year->id) }}" method="POST">
+                        <form action="{{ route('semesters.destroy',$semester->id) }}" method="POST">
            
-                            <a class="btn btn-sm btn-light" href="{{ route('years.edit',$year->id) }}">
+                            <a class="btn btn-sm btn-light" href="{{ route('semesters.edit',$semester->id) }}">
                               <i class="fas fa-edit"></i>
                             </a>
            
@@ -40,8 +40,7 @@
                 </tr>
                 @endforeach
             </table>
-          
-            {!! $years->links() !!}
+            {!! $semesters->links() !!}
         </div>
     </div>
   </div>

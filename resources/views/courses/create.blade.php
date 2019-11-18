@@ -5,7 +5,7 @@
   <div class="col-md-6 offset-md-3">
     <div class="card">
         <div class="card-header">
-          <span class="float-left">Add New courses</span>
+          <span class="float-left">Add New Course</span>
           <div class="float-right">
               <a href="{{ route('courses.index') }}"> Back</a>
           </div>
@@ -28,7 +28,7 @@
                  <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Year</label>
+                            <label>Course</label>
                             <input type="text" name="name" class="form-control">
                         </div>
                     </div>

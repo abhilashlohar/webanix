@@ -3,14 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Validation\Rule;
 
-class Course extends Model
+class Semester extends Model
 {
-    use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -37,7 +34,7 @@ class Course extends Model
       return [
           'name' => [
             'required', 
-            Rule::unique('courses')->where(function ($query) {
+            Rule::unique('semesters')->where(function ($query) {
                 return $query->where('deleted', false);
             })->ignore($id)
           ],
@@ -47,8 +44,8 @@ class Course extends Model
     public static function messages($id = '') 
     {
       return [
-          'name.required' => 'You must enter course name.',
-          'name.unique' => 'The course name is already exists.',
+          'name.required' => 'You must enter semester name.',
+          'name.unique' => 'The semester name is already exists.',
       ];
     }
 }
