@@ -66,9 +66,9 @@
               </a>
             </li>
             <li class="nav-item p-1">
-              <a class="nav-link" href="year.html" style="text-align: center;">
+              <a class="nav-link" href="{{ route('years.index') }}" style="text-align: center;">
                 <img src="/img/calendar.png" style="height: 40px;"><br/>
-                <span style=" color: #FEFEFE; font-size: 14px;">  Year/Session </span> 
+                <span style=" color: #FEFEFE; font-size: 14px;">  Year </span> 
               </a>
             </li>
             <li class="nav-item p-1">
