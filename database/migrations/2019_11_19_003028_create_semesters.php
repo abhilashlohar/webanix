@@ -17,7 +17,7 @@ class CreateSemesters extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->boolean('deleted')->default(false);
-            $table->timestamps()->useCurrent()->change();
+            $table->timestamps();
         });
     }
 

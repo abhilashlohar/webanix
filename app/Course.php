@@ -51,4 +51,7 @@ class Course extends Model
           'name.unique' => 'The course name is already exists.',
       ];
     }
+    public function streams(){
+        $this->hasMany('Stream');
+    }
 }
