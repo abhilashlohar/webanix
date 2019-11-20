@@ -27,5 +27,21 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public static function rules($id = '') 
+    {
+      return [
+          'name' => [
+            'required'
+          ],
+      ];
+    }
+
+    public static function messages($id = '') 
+    {
+      return [
+          'name.required' => 'You must enter the name.',
+      ];
+    }
   
 }

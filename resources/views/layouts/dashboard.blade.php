@@ -78,7 +78,7 @@
               </a>
             </li>
             <li class="nav-item p-1">
-              <a class="nav-link" href="#" style="text-align: center;">
+              <a class="nav-link" href="{{ route('users.index') }}" style="text-align: center;">
                 <img src="/img/user.png" style="height: 40px;"><br/>
                 <span style=" color: #FEFEFE; font-size: 14px;">  Users </span> 
               </a>
