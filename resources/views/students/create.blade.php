@@ -39,6 +39,63 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="father_name" class="col-md-4 col-form-label text-md-right">{{ __('Father Name') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="father_name" type="text" class="form-control @error('father_name') is-invalid @enderror" name="father_name" value="{{ old('father_name') }}" required  autofocus>
+
+                                @error('father_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="mother_name" class="col-md-4 col-form-label text-md-right">{{ __('Mother Name') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="mother_name" type="text" class="form-control @error('mother_name') is-invalid @enderror" name="mother_name" value="{{ old('mother_name') }}" required  autofocus>
+
+                                @error('mother_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="course_id" class="col-md-4 col-form-label text-md-right">{{ __('Course') }}</label>
+
+                            <div class="col-md-6">
+                                <select id="course_id" class="form-control @error('course_id') is-invalid @enderror" required>
+                                    <option value="">Select</option>
+                                    @foreach ($courses as $course)
+                                    <option value="{{ $course->id }}"> {{ $course->name }} </option>
+                                    @endforeach
+                                </select>
+
+                                @error('course_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="stream_id" class="col-md-4 col-form-label text-md-right">{{ __('Stream') }}</label>
+
+                            <div class="col-md-6">
+                                <select id="stream_id" class="form-control">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                        </div>
+
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
@@ -53,4 +110,32 @@
         </div>
     </div>
 </div>
+
+@endsection
+
+@section('JS_Code')
+<script type="text/javascript">
+$( document ).ready(function() {
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $( "#course_id" ).on( "change", function() {
+        var course_id = $(this).val();
+        
+        $.ajax({
+           type:'POST',
+           url:"{{ route('streamsByCourseId') }}",
+           data:{course_id:course_id},
+           success:function(data){
+              alert(data.success);
+           }
+        });
+    });
+
+});
+</script>
 @endsection
