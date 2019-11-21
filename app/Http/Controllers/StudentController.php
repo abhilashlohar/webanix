@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Student;
+use App\Course;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -23,7 +25,9 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('students.create');
+        $courses = Course::all();
+
+        return view('students.create',compact('courses'));
     }
 
     /**

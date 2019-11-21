@@ -20,8 +20,8 @@ class CreateStudentsTable extends Migration
             $table->string('father_name')->nullable();
             $table->string('mother_name')->nullable();
             $table->date('dob')->nullable();
-            $table->uuid('course_id');
-            $table->uuid('stream_id')->nullable();
+            $table->uuid('course_id')->references('id')->on('courses');
+            $table->uuid('stream_id')->references('id')->on('streams')->nullable();
             $table->timestamps();
         });
     }

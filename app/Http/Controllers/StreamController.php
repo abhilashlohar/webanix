@@ -101,4 +101,9 @@ class StreamController extends Controller
         return redirect()->route('streams.index')
                         ->with('success','Stream deleted successfully');
     }
+
+    public function xyz()
+    {
+        return "hello";
+    }
 }
