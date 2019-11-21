@@ -102,8 +102,15 @@ class StreamController extends Controller
                         ->with('success','Stream deleted successfully');
     }
 
-    public function xyz()
+    public function xyz(Stream $stream)
     {
+        $courses = Course::all();
+        dd($courses);
         return "hello";
+    }
+    public function ajaxRequestPost(Request $request)
+    {
+        return $request;
+       //dd($request);
     }
 }

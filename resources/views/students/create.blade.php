@@ -128,7 +128,7 @@ $( document ).ready(function() {
         
         $.ajax({
            type:'POST',
-           url:"{{ route('streamsByCourseId') }}",
+           url:"{{ route('ajaxRequest.post') }}",
            data:{course_id:course_id},
            success:function(data){
               alert(data.success);

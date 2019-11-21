@@ -48,7 +48,7 @@ class Stream extends Model
           'name.unique' => 'The stream name is already exists.',
       ];
     }
-
+    
     public function getKeyType()
     {
         return 'string';
