@@ -3,21 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Validation\Rule;
 
-class Course extends Model
+class Stream extends Model
 {
-    use Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'name'
+        'name','course_id'
     ];
 
     public static function boot()
@@ -29,29 +21,33 @@ class Course extends Model
     }
 
     protected $casts = [
-      'id' => 'string'
+      'id' => 'string',
+      'course_id' => 'string'
     ];
 
-     public static function rules($id = '') 
+    public static function rules($id = '') 
     {
       return [
           'name' => [
             'required', 
-            Rule::unique('courses')->where(function ($query) {
+            Rule::unique('streams')->where(function ($query) {
                 return $query->where('deleted', false);
             })->ignore($id)
           ],
+          'course_id' => ['required'],
       ];
     }
 
     public static function messages($id = '') 
     {
       return [
-          'name.required' => 'You must enter course name.',
-          'name.unique' => 'The course name is already exists.',
+          'name.required' => 'You must enter stream name.',
+          'course_id.required' => 'You must select course name.',
+          'name.unique' => 'The stream name is already exists.',
       ];
     }
-    public function streams(){
-        $this->hasMany('Stream');
+
+    public function course(){
+      return $this->belongsTo(Course::class, 'id', 'name');
     }
 }

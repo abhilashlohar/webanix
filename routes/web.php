@@ -22,5 +22,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('years','YearController');
 Route::resource('courses','CourseController');
 Route::resource('semesters','SemesterController');
+Route::resource('streams','StreamController');
 Route::resource('users','UserController');
-

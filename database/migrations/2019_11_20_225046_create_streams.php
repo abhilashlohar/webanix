@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSemesters extends Migration
+class CreateStreams extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateSemesters extends Migration
      */
     public function up()
     {
-        Schema::create('semesters', function (Blueprint $table) {
+        Schema::create('streams', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('course_id');
+            $table->foreign('course_id')->references('id')->on('courses');
             $table->string('name');
             $table->boolean('deleted')->default(false);
             $table->timestamps();
@@ -28,6 +30,6 @@ class CreateSemesters extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('semesters');
+        Schema::dropIfExists('streams');
     }
 }
