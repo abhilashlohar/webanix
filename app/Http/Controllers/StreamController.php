@@ -16,10 +16,6 @@ class StreamController extends Controller
     public function index()
     {
          $streams = Stream::with('course')->paginate(5);
-         // $streams = Stream::join('course', 'streams.course_id', '=', 'course.id');
-
-        dd(response()->json($streams));
-// Category::with('posts')->paginate(1);
         return view('streams.index',compact('streams'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -32,7 +28,6 @@ class StreamController extends Controller
     public function create()
     {
         $courses = Course::all();
-
         return view('streams.create',compact('courses'));
     }
 
@@ -44,7 +39,12 @@ class StreamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(Stream::rules(), Stream::messages());
+
+        Stream::create($request->all());
+   
+        return redirect()->route('streams.index')
+                        ->with('success','Stream created successfully.');
     }
 
     /**
@@ -66,7 +66,8 @@ class StreamController extends Controller
      */
     public function edit(Stream $stream)
     {
-        //
+        $courses = Course::all();
+        return view('streams.edit',compact('stream','courses'));
     }
 
     /**
@@ -78,7 +79,12 @@ class StreamController extends Controller
      */
     public function update(Request $request, Stream $stream)
     {
-        //
+        $request->validate(Stream::rules($stream->id), Stream::messages());
+  
+        $stream->update($request->all());
+  
+        return redirect()->route('streams.index')
+                        ->with('success','Stream updated successfully');
     }
 
     /**
@@ -89,6 +95,10 @@ class StreamController extends Controller
      */
     public function destroy(Stream $stream)
     {
-        //
+        $stream->deleted = true;
+        $stream->save();
+  
+        return redirect()->route('streams.index')
+                        ->with('success','Stream deleted successfully');
     }
 }

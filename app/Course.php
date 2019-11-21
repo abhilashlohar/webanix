@@ -51,7 +51,13 @@ class Course extends Model
           'name.unique' => 'The course name is already exists.',
       ];
     }
+
+    public function getKeyType()
+    {
+        return 'string';
+    }
+    
     public function streams(){
-        $this->hasMany('Stream');
+        $this->hasMany(Stream::class);
     }
 }
