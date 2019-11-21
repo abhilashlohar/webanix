@@ -25,3 +25,4 @@ Route::resource('semesters','SemesterController');
 Route::resource('streams','StreamController');
 Route::resource('users','UserController');
 Route::resource('students','StudentController');
+Route::resource('marksheets','MarksheetController');
