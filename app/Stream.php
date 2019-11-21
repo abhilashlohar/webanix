@@ -12,6 +12,7 @@ class Stream extends Model
         'name','course_id'
     ];
 
+
     public static function boot()
     {
         parent::boot();
@@ -47,7 +48,12 @@ class Stream extends Model
       ];
     }
 
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
     public function course(){
-      return $this->belongsTo(Course::class, 'id', 'name');
+      return $this->belongsTo(Course::class);
     }
 }

@@ -16,17 +16,16 @@
           </div>
         </div>
         <div class="card-body">
-          @foreach ($courses as $course)
-            {{ $course }}
-          @endforeach
-          <!--  <table class="table table-sm">
+           <table class="table table-sm">
                 <tr>
+                    <th>Course Name</th>
                     <th>Stream Name</th>
                     <th width="280px">Action</th>
                 </tr>
 
                 @foreach ($streams as $stream)
                 <tr>
+                    <td>{{ $stream->course->name }}</td>
                     <td>{{ $stream->name }}</td>
                     <td>
                         <form action="{{ route('streams.destroy',$stream->id) }}" method="POST">
@@ -44,7 +43,7 @@
                 </tr>
                 @endforeach
             </table>
-            {!! $streams->links() !!} -->
+            {!! $streams->links() !!}
         </div>
     </div>
   </div>
