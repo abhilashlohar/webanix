@@ -5,17 +5,18 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Add New Student') }}</div>
+                <div class="card-header">{{ __('Edit Student') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('students.store') }}">
+                    <form method="POST" action="{{ route('students.update', $student->id) }}">
                         @csrf
+                        @method('PUT')
 
                         <div class="form-group row">
                             <label for="enrollment" class="col-md-4 col-form-label text-md-right">{{ __('Enrollment Number') }}</label>
 
                             <div class="col-md-6">
-                                <input id="enrollment" type="text" class="form-control @error('enrollment') is-invalid @enderror" name="enrollment" value="{{ old('enrollment') }}" required  autofocus>
+                                <input id="enrollment" type="text" class="form-control @error('enrollment') is-invalid @enderror" name="enrollment" value="{{ $student->enrollment }}" required  autofocus>
 
                                 @error('enrollment')
                                     <span class="invalid-feedback" role="alert">
@@ -29,7 +30,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required >
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $student->name }}" required >
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -43,7 +44,7 @@
                             <label for="father_name" class="col-md-4 col-form-label text-md-right">{{ __('Father Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="father_name" type="text" class="form-control @error('father_name') is-invalid @enderror" name="father_name" value="{{ old('father_name') }}" >
+                                <input id="father_name" type="text" class="form-control @error('father_name') is-invalid @enderror" name="father_name" value="{{ $student->father_name }}" >
 
                                 @error('father_name')
                                     <span class="invalid-feedback" role="alert">
@@ -57,7 +58,7 @@
                             <label for="mother_name" class="col-md-4 col-form-label text-md-right">{{ __('Mother Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="mother_name" type="text" class="form-control @error('mother_name') is-invalid @enderror" name="mother_name" value="{{ old('mother_name') }}" >
+                                <input id="mother_name" type="text" class="form-control @error('mother_name') is-invalid @enderror" name="mother_name" value="{{ $student->mother_name }}" >
 
                                 @error('mother_name')
                                     <span class="invalid-feedback" role="alert">
@@ -88,7 +89,10 @@
                                 <select id="course_id" name="course_id" class="form-control @error('course_id') is-invalid @enderror" required>
                                     <option value="">Select</option>
                                     @foreach ($courses as $course)
-                                    <option value="{{ $course->id }}"> {{ $course->name }} </option>
+                                    <option 
+                                        value="{{ $course->id }}" 
+                                        {{ ( $course->id == $student->course_id ) ? 'selected' : '' }}> {{ $course->name }} 
+                                    </option>
                                     @endforeach
                                 </select>
 
@@ -106,6 +110,12 @@
                             <div class="col-md-6">
                                 <select id="stream_id" name="stream_id" class="form-control">
                                     <option value="">Select</option>
+                                    @foreach ($streams as $stream)
+                                    <option 
+                                        value="{{ $stream->id }}" 
+                                        {{ ( $stream->id == $student->stream_id ) ? 'selected' : '' }}> {{ $stream->name }} 
+                                    </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

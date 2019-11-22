@@ -32,7 +32,10 @@ class Student extends Model
       return [
           'enrollment' => [
             'required', 
+            Rule::unique('students')->ignore($id)
           ],
+          'name' => 'required',
+          'course_id' => 'required',
       ];
     }
 
