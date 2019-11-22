@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Student;
 use App\Course;
+use App\Stream;
+
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -13,9 +15,30 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $courses = Course::all()->where('deleted', false);
+        $streams = Stream::all()->where('deleted', false);
+        
+        return view('students.index',compact('courses','streams'));
+        
+    }
+
+    public function studentSearch(Request $request)
+    {
+        $courses = Course::all()->where('deleted', false);
+        $streams = Stream::all()->where('deleted', false);
+        $students = Student::with('course','stream')
+                            ->orWhere('enrollment', $request->enrollment)
+                            ->orWhere('name', 'ILIKE', '%'.$request->name.'%')
+                            ->orWhere('father_name', $request->father_name)
+                            ->orWhere('mother_name', $request->mother_name)
+                            ->orWhere('course_id', $request->course_id)
+                            ->orWhere('stream_id', $request->stream_id)
+                            ->paginate(5);
+
+        return view('students.index',compact('students','courses','streams'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**

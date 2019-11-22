@@ -27,4 +27,5 @@ Route::resource('users','UserController');
 Route::resource('students','StudentController');
 Route::resource('marksheets','MarksheetController');
 Route::post('ajaxRequest', 'StreamController@ajaxRequestPost')->name('ajaxRequest.post');
+Route::post('students', 'StudentController@studentSearch');
 // Route::get('/streams', 'StreamController@xyz');
