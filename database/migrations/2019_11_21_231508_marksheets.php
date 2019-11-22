@@ -17,7 +17,7 @@ class Marksheets extends Migration
             $table->uuid('id')->primary();
             $table->uuid('year_id');
             $table->foreign('year_id')->references('id')->on('years');
-            $table->uuid('semester_id');
+            $table->uuid('semester_id')->nullable();
             $table->foreign('semester_id')->references('id')->on('semesters');
             $table->uuid('student_id');
             $table->foreign('student_id')->references('id')->on('students');

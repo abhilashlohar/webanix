@@ -24,19 +24,8 @@
                
             <form action="{{ route('marksheets.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-              
+                <input type="hidden" name="student_id" value="{{$student_id}}">
                  <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Student</label>
-                            <select name="student_id" class="form-control">
-                            	<option value="">---Select Student---</option>
-                            	@foreach ($students as $student)
-                            		<option value="{{ $student->id }}">{{ $student->name }}</option>
-                            	@endforeach
-                            </select>
-                        </div>
-                    </div>
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Year</label>

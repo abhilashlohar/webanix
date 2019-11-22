@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Marksheet;
 use App\Semester;
 use App\Year;
-use App\Student;
 use Illuminate\Http\Request;
 
 class MarksheetController extends Controller
@@ -25,12 +24,12 @@ class MarksheetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $student_id = $request->student_id;
         $semesters = Semester::all();
         $years = Year::all();
-        $students = Student::all();
-        return view('marksheets.create',compact('semesters','years','students'));
+        return view('marksheets.create',compact('semesters','years','student_id'));
     }
 
     /**
@@ -72,8 +71,7 @@ class MarksheetController extends Controller
     {
         $semesters = Semester::all();
         $years = Year::all();
-        $students = Student::all();
-        return view('marksheets.edit',compact('marksheet','semesters','years','students'));
+        return view('marksheets.edit',compact('marksheet','semesters','years'));
     }
 
     /**
