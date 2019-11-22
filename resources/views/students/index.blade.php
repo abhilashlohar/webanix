@@ -6,10 +6,13 @@
         <div class="card">
             <div class="card-header">
               <span class="float-left">Student Search</span>
+              <div class="float-right">
+                <a href="{{ route('students.create') }}"> Add New Student</a>
+                </div>
             </div>
+            
             <div class="card-body">
-                <form action="{{ route('students.index') }}" method="POST">
-                    @csrf
+                <form action="{{ route('students.index') }}" method="GET">
                   
                      <div class="row">
                          <div class="col-md-6">

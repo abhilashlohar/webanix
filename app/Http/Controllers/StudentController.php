@@ -16,29 +16,27 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        $courses = Course::all()->where('deleted', false);
-        $streams = Stream::all()->where('deleted', false);
+        // $courses = Course::all()->where('deleted', false);
+        // $streams = Stream::all()->where('deleted', false);
         
-        return view('students.index',compact('courses','streams'));
-        
-    }
+        // return view('students.index',compact('courses','streams'));
 
-    public function studentSearch(Request $request)
-    {
-        $courses = Course::all()->where('deleted', false);
+         $courses = Course::all()->where('deleted', false);
         $streams = Stream::all()->where('deleted', false);
         $students = Student::with('course','stream')
-                            ->orWhere('enrollment', $request->enrollment)
+                            ->orWhere('enrollment', 'ILIKE', '%'.$request->enrollment.'%')
                             ->orWhere('name', 'ILIKE', '%'.$request->name.'%')
-                            ->orWhere('father_name', $request->father_name)
-                            ->orWhere('mother_name', $request->mother_name)
+                            ->orWhere('father_name', 'ILIKE', '%'.$request->father_name.'%')
+                            ->orWhere('mother_name', 'ILIKE', '%'.$request->mother_name.'%')
                             ->orWhere('course_id', $request->course_id)
                             ->orWhere('stream_id', $request->stream_id)
                             ->paginate(5);
 
         return view('students.index',compact('students','courses','streams'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
+        
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -77,7 +75,13 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $students = Student::find($id)->with('course','stream','marksheets.year','marksheets.semester')->first();
+        // foreach ( $students->marksheets as $marksheet)
+        // {
+        //     dd($marksheet->semester->name);
+        // }
+        // dd($students);
+        return view('students.show',compact('students'));
     }
 
     /**

@@ -44,4 +44,9 @@ class Year extends Model
           'name.unique' => 'The year name is already exists.',
       ];
     }
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
 }

@@ -28,7 +28,10 @@ class Semester extends Model
     protected $casts = [
       'id' => 'string'
     ];
-
+    public function getKeyType()
+    {
+        return 'string';
+    }
      public static function rules($id = '') 
     {
       return [

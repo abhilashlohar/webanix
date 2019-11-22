@@ -32,7 +32,6 @@ class Marksheet extends Model
     public static function rules($id = '') 
     {
       return [
-          'semester_id' => 'required',
           'marksheet_file' => 'required|mimes:pdf|max:2048',
           'year_id' => 'required',
       ];
@@ -41,7 +40,6 @@ class Marksheet extends Model
     public static function messages($id = '') 
     {
       return [
-          'semester_id.required' => 'You must select semester.',
           'year_id.required' => 'You must select year.',
           'marksheet_file.required' => 'You must select marksheet.',
       ];

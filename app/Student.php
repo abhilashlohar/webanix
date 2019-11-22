@@ -58,4 +58,7 @@ class Student extends Model
     public function stream(){
       return $this->belongsTo(Stream::class);
     }
+    public function marksheets(){
+      return $this->hasMany(Marksheet::class);
+    }
 }
