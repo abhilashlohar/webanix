@@ -102,15 +102,15 @@ class StreamController extends Controller
                         ->with('success','Stream deleted successfully');
     }
 
-    public function xyz(Stream $stream)
+     /**
+     * Provides a select box's options 
+     *
+     * @param  \App\Stream  $stream
+     * @return \Illuminate\Http\Response
+     */ 
+    public function list(Request $request)
     {
-        $courses = Course::all();
-        dd($courses);
-        return "hello";
-    }
-    public function ajaxRequestPost(Request $request)
-    {
-        return $request;
-       //dd($request);
+        $streams = Stream::latest()->where('course_id', $request->course_id)->get();
+        return view('streams.list', compact('streams'));
     }
 }

@@ -56,13 +56,13 @@
               </a>
             </li>
             <li class="nav-item p-1">
-              <a class="nav-link" href="course.html" style="text-align: center;">
+              <a class="nav-link" href="{{ route('courses.index') }}" style="text-align: center;">
                 <img src="/img/homework.png" style="height: 40px;"><br/>
                 <span style=" color: #FEFEFE; font-size: 14px;">  Courses </span> 
               </a>
             </li>
             <li class="nav-item p-1">
-              <a class="nav-link" href="stream.html" style="text-align: center;">
+              <a class="nav-link" href="{{ route('streams.index') }}" style="text-align: center;">
                 <img src="/img/stream.png" style="height: 40px;"><br/>
                 <span style=" color: #FEFEFE; font-size: 14px;">  Streams </span> 
               </a>

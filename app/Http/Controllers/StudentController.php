@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Student;
 use App\Course;
+use App\Stream;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -38,7 +39,13 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(Student::rules(), Student::messages());
+
+  
+        Student::create($request->all());
+   
+        return redirect()->route('students.index')
+                        ->with('success','Student added successfully.');
     }
 
     /**
@@ -58,9 +65,12 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Student $student)
     {
-        //
+        $courses = Course::all();
+        $streams = Stream::where('course_id',$student->course_id)->get();
+
+        return view('students.edit',compact('student', 'courses', 'streams'));
     }
 
     /**
@@ -70,9 +80,15 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Student $student)
     {
-        //
+        $request->validate(Student::rules($student->id), Student::messages());
+
+  
+        $student->update($request->all());
+   
+        return redirect()->route('students.index')
+                        ->with('success','Student updated successfully.');
     }
 
     /**
