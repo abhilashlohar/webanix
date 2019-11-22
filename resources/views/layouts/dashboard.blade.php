@@ -50,7 +50,7 @@
               </a>
             </li>
             <li class="nav-item p-1">
-              <a class="nav-link" href="students.html" style="text-align: center;">
+              <a class="nav-link" href="{{ route('students.index') }}" style="text-align: center;">
                 <img src="/img/student.png" style="height: 40px;"><br/>
                 <span style=" color: #FEFEFE; font-size: 14px;">  Students </span> 
               </a>
@@ -74,7 +74,7 @@
               </a>
             </li>
             <li class="nav-item p-1">
-              <a class="nav-link" href="semester.html" style="text-align: center;">
+              <a class="nav-link" href="{{ route('semesters.index') }}" style="text-align: center;">
                 <img src="/img/library.png" style="height: 40px;"><br/>
                 <span style=" color: #FEFEFE; font-size: 14px;">  Semester </span> 
               </a>

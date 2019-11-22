@@ -33,7 +33,7 @@
 
 .btn-pink {
 	background-color: #FF6468;
-	color: #FFF;
+	color: #FFF !important;
 }
 
 .btn-pink:hover {
@@ -53,4 +53,8 @@
 
 .screen-title {
 	color: #7b7373;
+}
+
+.tblborder {
+	border: solid 1px #CCC;
 }
