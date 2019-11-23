@@ -86,7 +86,7 @@
 
                             <div class="col-md-6">
                                 <select id="course_id" name="course_id" class="form-control @error('course_id') is-invalid @enderror" required>
-                                    <option value="">Select</option>
+                                    <option value="">--Select--</option>
                                     @foreach ($courses as $course)
                                     <option value="{{ $course->id }}"> {{ $course->name }} </option>
                                     @endforeach
@@ -105,7 +105,7 @@
 
                             <div class="col-md-6">
                                 <select id="stream_id" name="stream_id" class="form-control">
-                                    <option value="">Select</option>
+                                    <option value="">--Select--</option>
                                 </select>
                             </div>
                         </div>
@@ -116,6 +116,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Save') }}
                                 </button>
+                                <a class="btn btn-light" href="{{ route('students.index') }}">Cancel</a>
                             </div>
                         </div>
                     </form>
