@@ -38,7 +38,7 @@ class StudentController extends Controller
                 if ($request->has('stream_id') and $request->stream_id) {
                     $q->where('stream_id', '=', $request->stream_id);
                 }
-        })->paginate(5);
+        })->paginate(30);
 
         return view('students.index',compact('students', 'courses', 'request', 'streams'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
