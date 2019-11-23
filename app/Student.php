@@ -25,6 +25,7 @@ class Student extends Model
       'id' => 'string',
       'course_id' => 'string',
       'stream_id' => 'string',
+      'dob' => 'date:d-m-y'
     ];
 
     public static function rules($id = '') 
