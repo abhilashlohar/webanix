@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Validation\Rule;
 
 class User extends Authenticatable
 {
@@ -31,9 +32,11 @@ class User extends Authenticatable
     public static function rules($id = '') 
     {
       return [
-          'name' => [
-            'required'
-          ],
+          'name' => 'required',
+          'username' => [
+            'required', 
+            Rule::unique('users')->ignore($id)
+          ]
       ];
     }
 
