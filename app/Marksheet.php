@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 class Marksheet extends Model
 {
     protected $fillable = [
-        'student_id','semester_id','year_id','marksheet_src'
+        'student_id','semester_id','year_id','marksheet_src','result'
     ];
 
 
@@ -27,6 +27,7 @@ class Marksheet extends Model
       'student_id' => 'string',
       'semester_id' => 'string',
       'year_id' => 'string',
+
     ];
 
     public static function rules($id = '') 
@@ -34,6 +35,7 @@ class Marksheet extends Model
       return [
           'marksheet_file' => 'required|mimes:pdf|max:2048',
           'year_id' => 'required',
+          'result' => 'required',
       ];
     }
 
@@ -42,6 +44,7 @@ class Marksheet extends Model
       return [
           'year_id.required' => 'You must select year.',
           'marksheet_file.required' => 'You must select marksheet.',
+          'result.required' => 'You must enter result like Pass or Fail etc.',
       ];
     }
 

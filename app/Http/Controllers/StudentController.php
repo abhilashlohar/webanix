@@ -16,23 +16,31 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        // $courses = Course::all()->where('deleted', false);
-        // $streams = Stream::all()->where('deleted', false);
-        
-        // return view('students.index',compact('courses','streams'));
-
          $courses = Course::all()->where('deleted', false);
-        $streams = Stream::all()->where('deleted', false);
-        $students = Student::with('course','stream')
-                            ->orWhere('enrollment', 'ILIKE', '%'.$request->enrollment.'%')
-                            ->orWhere('name', 'ILIKE', '%'.$request->name.'%')
-                            ->orWhere('father_name', 'ILIKE', '%'.$request->father_name.'%')
-                            ->orWhere('mother_name', 'ILIKE', '%'.$request->mother_name.'%')
-                            ->orWhere('course_id', $request->course_id)
-                            ->orWhere('stream_id', $request->stream_id)
-                            ->paginate(5);
+         $streams = Stream::all()->where('deleted', false)->where('course_id', $request->course_id);
 
-        return view('students.index',compact('students','courses','streams'))
+         $students = Student::with('course','stream')->where(function($q) use ($request) {
+                if ($request->has('enrollment') and $request->enrollment) {
+                    $q->where('enrollment', 'ILIKE', '%'.$request->enrollment.'%');
+                }
+                if ($request->has('name') and $request->name) {
+                    $q->where('name', 'ILIKE', '%'.$request->name.'%');
+                }
+                if ($request->has('father_name') and $request->father_name) {
+                    $q->where('father_name', 'ILIKE', '%'.$request->father_name.'%');
+                }
+                if ($request->has('mother_name') and $request->mother_name) {
+                    $q->where('mother_name', 'ILIKE', '%'.$request->mother_name.'%');
+                }
+                if ($request->has('course_id') and $request->course_id) {
+                    $q->where('course_id', '=', $request->course_id);
+                }
+                if ($request->has('stream_id') and $request->stream_id) {
+                    $q->where('stream_id', '=', $request->stream_id);
+                }
+        })->paginate(5);
+
+        return view('students.index',compact('students', 'courses', 'request', 'streams'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
         
     }

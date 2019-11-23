@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header">
           <span class="float-left">Edit Marksheet</span>
-          <div class="float-right">s
+          <div class="float-right">
               <a href="{{ route('marksheets.index') }}"> Back</a>
           </div>
         </div>
@@ -22,28 +22,20 @@
                 </div>
             @endif
                
-            <form action="{{ route('marksheets.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('marksheets.update', $marksheet->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
               
                  <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Student</label>
-                            <select name="student_id" class="form-control">
-                            	<option value="">---Select Student---</option>
-                            	@foreach ($students as $student)
-                            		<option value="{{ $student->id }}">{{ $student->name }}</option>
-                            	@endforeach
-                            </select>
-                        </div>
-                    </div>
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Year</label>
                             <select name="year_id" class="form-control">
                                 <option value="">---Select Year---</option>
                                 @foreach ($years as $year)
-                                    <option value="{{ $year->id }}">{{ $year->name }}</option>
+                                    <option 
+                                        value="{{ $year->id }}"
+                                        {{ ( $marksheet->year_id == $year->id ) ? 'selected' : '' }}>{{ $year->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -54,9 +46,17 @@
                             <select name="semester_id" class="form-control">
                                 <option value="">---Select Semester---</option>
                                 @foreach ($semesters as $semester)
-                                    <option value="{{ $semester->id }}">{{ $semester->name }}</option>
+                                    <option 
+                                    value="{{ $semester->id }}"
+                                    {{ ( $marksheet->semester_id == $semester->id ) ? 'selected' : '' }}>{{ $semester->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Result</label>
+                            <input type="text" name="result" value="{{ $marksheet->result }}" class="form-control" placeholder="Ex.:- Pass, Failed...">
                         </div>
                     </div>
                     <div class="col-md-12">
