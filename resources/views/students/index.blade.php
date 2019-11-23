@@ -108,7 +108,7 @@
                             <td>{{ $student->mother_name }}</td>
                             <td><?= date('d-m-Y', strtotime($student->dob)) ?></td>
                             <td>{{ $student->course->name }}</td>
-                            <td>{{ $student->stream->name }}</td>
+                            <td>{{ $student->stream->name ?? '-' }}</td>
                         </tr>
                         @endforeach
                     </table>
