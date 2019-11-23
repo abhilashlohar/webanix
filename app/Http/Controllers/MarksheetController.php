@@ -6,6 +6,7 @@ use App\Marksheet;
 use App\Semester;
 use App\Year;
 use Illuminate\Http\Request;
+use File;
 
 class MarksheetController extends Controller
 {
@@ -43,11 +44,12 @@ class MarksheetController extends Controller
         $request->validate(Marksheet::rules(), Marksheet::messages());
         $fileName = time().'.'.$request->marksheet_file->extension();  
         $request->marksheet_file->move(public_path('uploads'), $fileName);
-        $request->request->add(['marksheet_src' => 'uploads/'.$fileName]);
+        $request->request->add(['marksheet_src' => $fileName]);
+
         Marksheet::create($request->all());
    
-        return back()
-            ->with('success','You have successfully upload file.');
+        return redirect()->route('students.show',$request->student_id)
+            ->with('success','You have successfully upload marksheet.');
     }
 
     /**
@@ -83,7 +85,20 @@ class MarksheetController extends Controller
      */
     public function update(Request $request, Marksheet $marksheet)
     {
-        //
+        $request->validate(Marksheet::rules(), Marksheet::messages());
+        $destinationPath = public_path('uploads');
+        
+        File::delete($destinationPath.'/'.$marksheet->marksheet_src);  /// Unlink File
+
+        $fileName = time().'.'.$request->marksheet_file->extension();  
+        $request->marksheet_file->move(public_path('uploads'), $fileName);
+        $request->request->add(['marksheet_src' => $fileName]);
+        $request->request->add(['student_id' => $marksheet->student_id]);
+
+        Marksheet::create($request->all());
+   
+        return redirect()->route('students.show',$request->student_id)
+            ->with('success','You have successfully upload marksheet.');
     }
 
     /**

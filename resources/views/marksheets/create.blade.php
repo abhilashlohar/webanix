@@ -50,6 +50,12 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label>Result</label>
+                            <input type="text" name="result" class="form-control" placeholder="Ex.:- Pass, Failed...">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label>Upload Marksheet</label>
                             <input type="file" name="marksheet_file" class="form-control">
                         </div>

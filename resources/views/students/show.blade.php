@@ -15,31 +15,31 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-4">
-                <span style="color: #CCC;">Enrollment Number:</span>
+                <span style="color: #575555;">Enrollment Number:</span>
                 <span class="ml-2"> {{ $students->enrollment }} </span>
               </div>
               <div class="col-md-4">
-                <span style="color: #CCC;">Name:</span>
+                <span style="color: #575555;">Name:</span>
                 <span class="ml-2"> {{ $students->name }} </span>
               </div>
             </div>
             <div class="row mt-2">
               <div class="col-md-4">
-                <span style="color: #CCC;">Father:</span>
+                <span style="color: #575555;">Father:</span>
                 <span class="ml-2"> {{ $students->father_name }} </span>
               </div>
               <div class="col-md-4">
-                <span style="color: #CCC;">Mother:</span>
+                <span style="color: #575555;">Mother:</span>
                 <span class="ml-2">  {{ $students->mother_name }} </span>
               </div>
             </div>
             <div class="row mt-2">
               <div class="col-md-4">
-                <span style="color: #CCC;">Course:</span>
+                <span style="color: #575555;">Course:</span>
                 <span class="ml-2">  {{ $students->course->name }} </span>
               </div>
               <div class="col-md-4">
-                <span style="color: #CCC;">Stream:</span>
+                <span style="color: #575555;">Stream:</span>
                 <span class="ml-2">  {{ $students->stream->name }} </span>
               </div>
             </div>
@@ -53,16 +53,20 @@
                       <th scope="col">Semester</th>
                       <th scope="col">Result</th>
                       <th scope="col">Year</th>
-                      <th></th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     @foreach ( $students->marksheets as $marksheet)
                     <tr>
-                      <td>{{ $marksheet->semester->name ?? '' }}</td>
-                      <td>Pass</td>
+                      <td>{{ $marksheet->semester->name ?? '-' }}</td>
+                      <td>{{ $marksheet->result }}</td>
                       <td>{{ $marksheet->year->name }}</td>
-                      <td><a href="{{ $marksheet->marksheet_src }}">Download</a></td>
+                      <td>
+                        <a class="btn btn-sm btn-light" href="{{ route('marksheets.edit',$marksheet->id) }}">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{{ asset('uploads/'.$marksheet->marksheet_src) }}" download>Download</a></td>
                     </tr>
                     @endforeach
                   </tbody>

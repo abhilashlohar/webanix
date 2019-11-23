@@ -22,6 +22,7 @@ class Marksheets extends Migration
             $table->uuid('student_id');
             $table->foreign('student_id')->references('id')->on('students');
             $table->string('marksheet_src');
+            $table->string('result');
             $table->boolean('deleted')->default(false);
             $table->timestamps();
         });
