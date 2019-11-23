@@ -18,6 +18,9 @@
   <link href="/css/style.css" rel="stylesheet">
 
   <!-- font awesome -->
+  <script src="https://kit.fontawesome.com/9d093081ee.js" crossorigin="anonymous"></script>
+
+  
   <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
  </head>
