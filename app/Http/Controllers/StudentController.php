@@ -83,7 +83,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $students = Student::find($id)->with('course','stream','marksheets.year','marksheets.semester')->first();
+        $students = Student::where('id', $id)->with('course','stream','marksheets.year','marksheets.semester')->first();
         // foreach ( $students->marksheets as $marksheet)
         // {
         //     dd($marksheet->semester->name);
