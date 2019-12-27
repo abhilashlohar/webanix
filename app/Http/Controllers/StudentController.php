@@ -155,7 +155,7 @@ class StudentController extends Controller
 		    $file_path = $file->getPathName(); 
 		  	$csv_read_file = fopen($file_path, "r");
 			$i=1;
-			$flag=0; $stu_upd=0; $stu_ins=0;
+			$flag=0; $stu_upd=0; $stu_ins=0; $stuArrr['insert'] = 0;  $stuArrr['update'] = 0;
 			while (($column = fgetcsv($csv_read_file, 10000, ",")) !== FALSE) {
                 if($i!=1)
                 {
@@ -165,10 +165,10 @@ class StudentController extends Controller
                     $student = DB::table('students')->where('enrollment', $column[0])->first();
                     if(!$student)
                     {
-                        $stuArrr['insert'] = $stu_ins++;
+                        $stuArrr['insert'] = ++$stu_ins;
                     }
                     else{
-                        $stuArrr['update'] = $stu_upd++;
+                        $stuArrr['update'] = ++$stu_upd;
                     }
                     //course check
                     $course = DB::table('courses')->where('name', 'ilike',$column[4])->first();
@@ -221,9 +221,11 @@ class StudentController extends Controller
     public  function saveDetail(Request $request)
     {
         $data = json_decode($request['csvdetail']);
+
         
         foreach($data as $key => $data_val)
         { 
+
             $student = DB::table('students')->where('enrollment', $data_val[0])->first();
             $course = DB::table('courses')->where('name', 'ilike',$data_val[4])->first();
             if(!$course)
@@ -278,11 +280,14 @@ class StudentController extends Controller
                     'name' => $data_val[7],
                 ];
 
-                $semid =  Semester::create($sem_data);
+                $sem_info =  Semester::create($sem_data);
+                $semid      =  $sem_info->id;
             }
             else{
                 $semid =  $sem->id;
             }
+
+
             if(!$student)
             {
                 $student_data = [
@@ -295,6 +300,9 @@ class StudentController extends Controller
                     'course_id' => $courseid,
                     'stream_id' => $stremid,
                 ];
+
+
+
                 $stdudent_info = Student::create($student_data);
                 $stdudent_id = $stdudent_info->id;
 
@@ -305,18 +313,20 @@ class StudentController extends Controller
                     'student_id' => $stdudent_id,
                     'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
                     'result' => $data_val[8],
-                ]; 
+                ];
+
                 Marksheet::create($marksheet_data);
                
             }
             else{
+
                 //$student = Student::where('id',$student->id)->get(); 
                 //dd($student->id);
                 $student_data = [
                     'name' => $student->name,
                     'father_name' => $student->father_name,
                     'mother_name' => $student->mother_name,
-                    'dob' => date("Y-m-d",strtotime($data_val[9])),
+                    // 'dob' => date("Y-m-d",strtotime($data_val[9])),
                     'course_id' => $courseid,
                     'stream_id' => $stremid,
                 ]; 
@@ -332,6 +342,8 @@ class StudentController extends Controller
                     'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
                     'result' => $data_val[8],
                 ]; 
+
+                
                 Marksheet::create($marksheet_data);
             }
         }

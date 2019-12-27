@@ -7,7 +7,6 @@
             <div class="card-header">
               <span class="float-left">Student Search</span>
               <div class="float-right">
-                <a href="{{ route('students.importmarksheet') }}"> Import Markseet</a>
 				<a href="{{ route('students.create') }}"> Add New Student</a>
                 </div>
             </div>
@@ -84,6 +83,7 @@
             <div class="card">
                 <div class="card-header">
                   <span class="float-left">Student Data</span>
+                  <a href="{{ route('students.importmarksheet') }}" class="float-right"> Import Students</a>
                 </div>
                 <div class="card-body">
                    <table class="table table-sm">

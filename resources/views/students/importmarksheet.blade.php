@@ -13,9 +13,8 @@
   <div class="col-md-6 offset-md-3">
     <div class="card">
         <div class="card-header">
-          <span class="float-left">Import Marksheet</span>
+          <span class="float-left">Import Students</span>
           <div class="float-right">
-              <a href="{{ route('students.sample') }}"> Sample File</a>
               <a href="{{ route('students.index') }}"> Back</a>
           </div>
         </div>
@@ -39,22 +38,30 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Upload Marksheet</label>
-                            <input type="file" name="marksheet_file" class="form-control">
+                            <input type="file" name="marksheet_file" class="form-control" required="required">
                         </div>
+                        Download <a href="{{ route('students.sample') }}"> Sample File</a>
                     </div>
                     <div class="col-md-12 text-center">
-                      <button type="submit" class="btn btn-pink">Save</button>
+                      <button type="submit" class="btn btn-pink">Import</button>
                     </div>
                 </div>
             </form>
             @endif
-            <div class="col-md-12 text-center">
+            <div class="col-md-12 ">
+             <?php 
+             $courseArr = array_unique($courseArr); 
+             $stremArr = array_unique($stremArr); 
+             $yrArr = array_unique($yrArr); 
+             $semArr = array_unique($semArr); 
+             ?>
             @if(count(@$courseArr)>0 or count(@$stremArr)>0 or count(@$yrArr)>0 or count(@$semArr)>0 or count($contentArr)>0)
              <table class="table table-sm tblborder">
+
               @if(count(@$courseArr)>0)
               <tr> 
-                <td>Following courses do not exist in the system. The system would create these.<br>Do you want to continue?<br>
-                  <ul class="ui-menu">
+                <td>Following courses do not exist in the system. The system would create these.<br>
+                  <ul>
                    @foreach ($courseArr as $courseArr1)
                     <li>{{ $courseArr1 }}</li>
                    @endforeach
@@ -64,8 +71,8 @@
                 @endif
                 @if(count(@$stremArr)>0)
                 <tr> 
-                 <td>Following strems do not exist in the system. The system would create these.<br>Do you want to continue?<br>
-                  <ul class="ui-menu">
+                 <td>Following streams do not exist in the system. The system would create these.<br>
+                  <ul>
                    @foreach ($stremArr as $stremArr1)
                     <li>{{ $stremArr1 }}</li>
                    @endforeach
@@ -75,8 +82,8 @@
                 @endif
                  @if(count(@$yrArr)>0)
                 <tr> 
-                 <td>Following years do not exist in the system. The system would create these.<br>Do you want to continue?<br>
-                  <ul class="ui-menu">
+                 <td>Following years do not exist in the system. The system would create these.<br>
+                  <ul>
                    @foreach ($yrArr as $yrArr1)
                     <li>{{ $yrArr1 }}</li>
                    @endforeach
@@ -86,8 +93,8 @@
                 @endif
                  @if(count(@$semArr)>0)
                 <tr>
-                 <td>Following semester do not exist in the system. The system would create these.<br>Do you want to continue?<br>
-                  <ul class="ui-menu">
+                 <td>Following semester do not exist in the system. The system would create these.<br>
+                  <ul>
                    @foreach ($semArr as $semArr1)
                     <li>{{ $semArr1 }}</li>
                    @endforeach
@@ -98,9 +105,9 @@
               @if(count($contentArr)>0)
               <tr>
                  <td>Student Records<br>
-                  <ul class="ui-menu">
-                  <li>New Record:{{ @$stuArrr['insert'] }}</li>
-                  <li>Update Record:{{ @$stuArrr['update'] }}</li>
+                  <ul>
+                  <li>{{ @$stuArrr['insert'] }} new student(s) will be imported.</li>
+                  <li>{{ @$stuArrr['update'] }} student(s) will be updated.</li>
                   </ul>
                  </td>
               </tr>
@@ -112,6 +119,7 @@
                @csrf
             <textarea name="csvdetail" style="display:none;" >{{ json_encode(@$contentArr) ?? '' }}</textarea>
             <div class="col-md-12 text-center">
+                <p>Do you want to continue?</p>
              <button type="submit" class="btn btn-pink">Yes, Import</button>
             </div>
           </form>
