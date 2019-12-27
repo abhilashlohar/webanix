@@ -7,7 +7,8 @@
             <div class="card-header">
               <span class="float-left">Student Search</span>
               <div class="float-right">
-                <a href="{{ route('students.create') }}"> Add New Student</a>
+                <a href="{{ route('students.importmarksheet') }}"> Import Markseet</a>
+				<a href="{{ route('students.create') }}"> Add New Student</a>
                 </div>
             </div>
             

@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Student;
 use App\Course;
 use App\Stream;
+use App\Year;
+use App\Semester;
+use App\Marksheet;
 use Illuminate\Http\Request;
+use DB;
+use Webpatser\Uuid\Uuid;
 
 class StudentController extends Controller
 {
@@ -133,5 +138,209 @@ class StudentController extends Controller
     public function destroy($id)
     {
         //
+    }
+	
+	public function importmarksheet()
+    {
+        $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
+        return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
+    }
+	
+	public function savemarksheet(Request $request)
+    {
+      $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
+	  if ($request->hasFile('marksheet_file')) {
+		    $file = $request->file('marksheet_file');
+		    $name = time().'-'.$file->getClientOriginalName();
+		    $file_path = $file->getPathName(); 
+		  	$csv_read_file = fopen($file_path, "r");
+			$i=1;
+			$flag=0; $stu_upd=0; $stu_ins=0;
+			while (($column = fgetcsv($csv_read_file, 10000, ",")) !== FALSE) {
+                if($i!=1)
+                {
+                    $contentArr[] = $column;
+                    //student record
+                    
+                    $student = DB::table('students')->where('enrollment', $column[0])->first();
+                    if(!$student)
+                    {
+                        $stuArrr['insert'] = $stu_ins++;
+                    }
+                    else{
+                        $stuArrr['update'] = $stu_upd++;
+                    }
+                    //course check
+                    $course = DB::table('courses')->where('name', 'ilike',$column[4])->first();
+                    
+                    if($course)
+                    {   
+                        //strem check
+                        $strem = DB::table('streams')->where('name', 'ilike', $column[5])->where('course_id',$course->id)->first(); 
+                        if(!$strem)
+                        {
+                            $flag=1;
+                            $stremArr[] = $column[5];
+                        }
+                    }
+                    else{
+                        $flag=1;
+                       $courseArr[]= $column[4];
+                    }
+                    //year
+                    $year = DB::table('years')->where('name', 'ilike', $column[6])->first(); 
+                    if(!$year)
+                    {
+                        $flag=1;
+                        $yrArr[] = $column[6];
+                    }
+                    //semester check
+                    $sem = DB::table('semesters')->where('name', 'ilike', $column[7])->first(); 
+                    if(!$sem)
+                    {
+                        $flag=1;
+                        $semArr[] = $column[7];
+                    }
+                }
+				
+			$i++;
+			} 
+            
+            return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
+            if($flag!=1)
+            {
+              //return $this->saveDetail($contentArr);
+            }
+	  }
+	  else{
+		  
+	  }
+	  
+    }
+	
+    public  function saveDetail(Request $request)
+    {
+        $data = json_decode($request['csvdetail']);
+        
+        foreach($data as $key => $data_val)
+        { 
+            $student = DB::table('students')->where('enrollment', $data_val[0])->first();
+            $course = DB::table('courses')->where('name', 'ilike',$data_val[4])->first();
+            if(!$course)
+            {
+                $course_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'name' => $data_val[4],
+                ];
+
+                $course_info  =  Course::create($course_data);
+                $courseid     = $course_info->id;
+            }
+            else{
+                $courseid =  $course->id;
+            }
+            $strem = DB::table('streams')->where('name', 'ilike', $data_val[5])->where('course_id',$courseid)->first(); 
+            if(!$strem)
+            {
+                $strem_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'course_id' => $courseid, 
+                    'name' => $data_val[5],
+                ];
+
+                $strem_info =  Stream::create($strem_data);
+                $stremid    =  $strem_info->id;
+            }
+            else{
+                $stremid =  $strem->id;
+            } 
+            //year
+            $year = DB::table('years')->where('name', 'ilike', $data_val[6])->first(); 
+            if(!$year)
+            {
+                $yr_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'name' => $data_val[6],
+                ];
+
+                $year_info =  Year::create($yr_data);
+                $yrid      =  $year_info->id;
+            }
+            else{
+                $yrid =  $year->id;
+            }
+
+            $sem = DB::table('semesters')->where('name', 'ilike', $data_val[7])->first(); 
+            if(!$sem)
+            {
+                $sem_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'name' => $data_val[7],
+                ];
+
+                $semid =  Semester::create($sem_data);
+            }
+            else{
+                $semid =  $sem->id;
+            }
+            if(!$student)
+            {
+                $student_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'enrollment' => $data_val[0],
+                    'name' => $data_val[1],
+                    'father_name' => $data_val[2],
+                    'mother_name' => $data_val[3],
+                    'dob' => '1990-12-12',
+                    'course_id' => $courseid,
+                    'stream_id' => $stremid,
+                ];
+                $stdudent_info = Student::create($student_data);
+                $stdudent_id = $stdudent_info->id;
+
+                $marksheet_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'year_id' => $yrid,
+                    'semester_id' => $semid,
+                    'student_id' => $stdudent_id,
+                    'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
+                    'result' => $data_val[8],
+                ]; 
+                Marksheet::create($marksheet_data);
+               
+            }
+            else{
+                //$student = Student::where('id',$student->id)->get(); 
+                //dd($student->id);
+                $student_data = [
+                    'name' => $student->name,
+                    'father_name' => $student->father_name,
+                    'mother_name' => $student->mother_name,
+                    'dob' => date("Y-m-d",strtotime($data_val[9])),
+                    'course_id' => $courseid,
+                    'stream_id' => $stremid,
+                ]; 
+                Student::where('id', $student->id)
+                    ->update($student_data);
+               //$student->update($student_data);
+
+                $marksheet_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'year_id' => $yrid,
+                    'semester_id' => $semid,
+                    'student_id' => $student->id,
+                    'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
+                    'result' => $data_val[8],
+                ]; 
+                Marksheet::create($marksheet_data);
+            }
+        }
+         return redirect()->route('students.importmarksheet')
+                        ->with('success','Data import successfully.');
+    }
+
+	public function sample()
+    {
+      return view('students.sample');
     }
 }
