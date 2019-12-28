@@ -155,7 +155,7 @@ class StudentController extends Controller
 		    $file_path = $file->getPathName(); 
 		  	$csv_read_file = fopen($file_path, "r");
 			$i=1;
-			$flag=0; $stu_upd=1; $stu_ins=1;
+			$flag=0; $stu_upd=0; $stu_ins=0;
 			while (($column = fgetcsv($csv_read_file, 10000, ",")) !== FALSE) {
                 if($i!=1)
                 {
@@ -323,27 +323,16 @@ class StudentController extends Controller
                 Student::where('id', $student->id)
                     ->update($student_data);
                //$student->update($student_data);
-                $marksheet = DB::table('marksheets')->where('year_id', $yrid)->where('semester_id', $semid)->where('student_id', $student->id)->first(); 
-                if(!$marksheet)
-                {
-                    $marksheet_data = [
-                        'id'=>(string) Uuid::generate(4),
-                        'year_id' => $yrid,
-                        'semester_id' => $semid,
-                        'student_id' => $student->id,
-                        'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
-                        'result' => $data_val[8],
-                    ]; 
-                    Marksheet::create($marksheet_data); 
-                }
-                else{
-                   $marksheet_data = [
-                        'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
-                        'result' => $data_val[8],
-                    ];
-                Marksheet::where('id', $marksheet->id)
-                    ->update($marksheet_data);
-                }
+
+                $marksheet_data = [
+                    'id'=>(string) Uuid::generate(4),
+                    'year_id' => $yrid,
+                    'semester_id' => $semid,
+                    'student_id' => $student->id,
+                    'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
+                    'result' => $data_val[8],
+                ]; 
+                Marksheet::create($marksheet_data);
             }
         }
          return redirect()->route('students.importmarksheet')
