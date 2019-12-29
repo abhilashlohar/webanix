@@ -253,14 +253,20 @@ class StudentController extends Controller
             $strem = DB::table('streams')->where('name', 'ilike', trim($data_val[5]))->where('course_id',$courseid)->first(); 
             if(!$strem)
             {
-                $strem_data = [
-                    'id'=>(string) Uuid::generate(4),
-                    'course_id' => $courseid, 
-                    'name' => trim($data_val[5]),
-                ];
+                if($data_val[5]!='')
+                {
+                    $strem_data = [
+                        'id'=>(string) Uuid::generate(4),
+                        'course_id' => $courseid, 
+                        'name' => trim($data_val[5]),
+                    ];
 
-                $strem_info =  Stream::create($strem_data);
-                $stremid    =  $strem_info->id;
+                    $strem_info =  Stream::create($strem_data);
+                    $stremid    =  $strem_info->id;
+                }
+                else{
+                    $stremid    = 0;
+                }
             }
             else{
                 $stremid =  $strem->id;
@@ -284,13 +290,18 @@ class StudentController extends Controller
             $sem = DB::table('semesters')->where('name', 'ilike', trim($data_val[7]))->first(); 
             if(!$sem)
             {
-                $sem_data = [
-                    'id'=>(string) Uuid::generate(4),
-                    'name' => trim($data_val[7]),
-                ];
+                if($data_val[7]!="")
+                {
+                    $sem_data = [
+                        'id'=>(string) Uuid::generate(4),
+                        'name' => trim($data_val[7]),
+                    ];
 
-                $sem_info =  Semester::create($sem_data);
-                $semid      =  $sem_info->id;
+                    $sem_info =  Semester::create($sem_data);
+                    $semid      =  $sem_info->id;
+                }else{
+                    $semid      =  0;
+                }
             }
             else{
                 $semid =  $sem->id;
