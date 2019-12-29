@@ -7,7 +7,7 @@
         <div class="card-header">
           <span class="float-left">Edit Marksheet</span>
           <div class="float-right">
-              <a href="{{ route('marksheets.index') }}"> Back</a>
+              <a href="{{ route('students.show',$marksheet->student->id) }}"> Back</a>
           </div>
         </div>
         <div class="card-body">
