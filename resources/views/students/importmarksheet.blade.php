@@ -29,7 +29,11 @@
                     </ul>
                 </div>
             @endif
-            
+            @if(Session::has('fail'))
+                <div class="alert alert-warning alert-block" role="alert" data-dismiss="alert">
+                    <strong>failure! &nbsp;</strong> {{ Session::get('fail') }}
+                </div>
+            @endif
             @if(empty($contentArr))  
             <form action="{{ route('students.savemarksheet') }}" method="POST" enctype="multipart/form-data">
                 @csrf

@@ -149,8 +149,16 @@ class StudentController extends Controller
 	public function savemarksheet(Request $request)
     {
       $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
-	  if ($request->hasFile('marksheet_file')) {
-		    $file = $request->file('marksheet_file');
+	  if ($request->hasFile('marksheet_file')) {   
+		    $file = $request->file('marksheet_file'); 
+            $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+            
+            if($ext!='csv')
+            {
+                return redirect()->route('students.importmarksheet')
+                     ->with('fail','This file not a csv file.Please uploade valid file.');
+                //return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
+            }
 		    $name = time().'-'.$file->getClientOriginalName();
 		    $file_path = $file->getPathName(); 
 		  	$csv_read_file = fopen($file_path, "r");
@@ -160,9 +168,13 @@ class StudentController extends Controller
 			while (($column = fgetcsv($csv_read_file, 10000, ",")) !== FALSE) {
                 if($i!=1)
                 {
+                   //student record
+                   if($column[0]=='' || $column[4]=='' || $column[6]=='')
+                    {
+                        return redirect()->route('students.importmarksheet')
+                     ->with('fail','Data Uncomplete.Please Uploade Valid CSV File.');
+                    }
                     $contentArr[] = $column;
-                    //student record
-                    if($column[0]==''){ $arrCheck['enrol_blank']='Some enrolment no field(s) are empty.';}
                     $student = DB::table('students')->where('enrollment', $column[0])->first();
                     if(!$student)
                     {
@@ -174,9 +186,13 @@ class StudentController extends Controller
                     //course check
                     $course = DB::table('courses')->where('name', 'ilike',$column[4])->first();
                     
-                    if($course)
-                    {   
-                        //strem check
+                    if(!$course)
+                    {  
+                        $courseArr[]= $column[4];    
+                    }
+                    else{
+                        $flag=1;
+                       //strem check
                         $strem = DB::table('streams')->where('name', 'ilike', $column[5])->where('course_id',$course->id)->first(); 
                         if(!$strem)
                         {
@@ -184,16 +200,12 @@ class StudentController extends Controller
                             $stremArr[] = $column[5];
                         }
                     }
-                    else{
-                        $flag=1;
-                       if($column[4]!=''){ $courseArr[]= $column[4]; }else{ $arrCheck['couses_blank']='Some course field(s) are empty.';}
-                    }
                     //year
                     $year = DB::table('years')->where('name', 'ilike', $column[6])->first(); 
                     if(!$year)
                     {
                         $flag=1;
-                        if($column[6]!=''){  $yrArr[] = $column[6];}else{ $arrCheck['yr_blank']='Some year field(s) are empty.';}
+                        $yrArr[] = $column[6];
                     }
                     //semester check
                     $sem = DB::table('semesters')->where('name', 'ilike', $column[7])->first(); 
@@ -208,10 +220,6 @@ class StudentController extends Controller
 			} 
             
             return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
-            if($flag!=1)
-            {
-              //return $this->saveDetail($contentArr);
-            }
 	  }
 	  else{
 		  
