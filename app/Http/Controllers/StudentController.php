@@ -175,7 +175,7 @@ class StudentController extends Controller
                      ->with('fail','Data Uncomplete.Please Uploade Valid CSV File.');
                     }
                     $contentArr[] = $column;
-                    $student = DB::table('students')->where('enrollment', $column[0])->first();
+                    $student = DB::table('students')->where('enrollment', trim($column[0]))->first();
                     if(!$student)
                     {
                         $stuArrr['insert'] = ++$stu_ins;
@@ -184,7 +184,7 @@ class StudentController extends Controller
                         $stuArrr['update'] = ++$stu_upd;
                     }
                     //course check
-                    $course = DB::table('courses')->where('name', 'ilike',$column[4])->first();
+                    $course = DB::table('courses')->where('name', 'ilike',trim($column[4]))->first();
                     
                     if(!$course)
                     {  
@@ -193,26 +193,26 @@ class StudentController extends Controller
                     else{
                         $flag=1;
                        //strem check
-                        $strem = DB::table('streams')->where('name', 'ilike', $column[5])->where('course_id',$course->id)->first(); 
+                        $strem = DB::table('streams')->where('name', 'ilike', trim($column[5]))->where('course_id',$course->id)->first(); 
                         if(!$strem)
                         {
                             $flag=1;
-                            $stremArr[] = $column[5];
+                            if($column[5]!=''){ $stremArr[] = $column[5];}
                         }
                     }
                     //year
-                    $year = DB::table('years')->where('name', 'ilike', $column[6])->first(); 
+                    $year = DB::table('years')->where('name', 'ilike', trim($column[6]))->first(); 
                     if(!$year)
                     {
                         $flag=1;
                         $yrArr[] = $column[6];
                     }
                     //semester check
-                    $sem = DB::table('semesters')->where('name', 'ilike', $column[7])->first(); 
+                    $sem = DB::table('semesters')->where('name', 'ilike', trim($column[7]))->first(); 
                     if(!$sem)
                     {
                         $flag=1;
-                        $semArr[] = $column[7];
+                        if($column[7]!=''){ $semArr[] = $column[7];}
                     }
                 }
 				
@@ -235,13 +235,13 @@ class StudentController extends Controller
         foreach($data as $key => $data_val)
         { 
 
-            $student = DB::table('students')->where('enrollment', $data_val[0])->first();
-            $course = DB::table('courses')->where('name', 'ilike',$data_val[4])->first();
+            $student = DB::table('students')->where('enrollment', trim($data_val[0]))->first();
+            $course = DB::table('courses')->where('name', 'ilike',trim($data_val[4]))->first();
             if(!$course)
             {
                 $course_data = [
                     'id'=>(string) Uuid::generate(4),
-                    'name' => $data_val[4],
+                    'name' => trim($data_val[4]),
                 ];
 
                 $course_info  =  Course::create($course_data);
@@ -250,13 +250,13 @@ class StudentController extends Controller
             else{
                 $courseid =  $course->id;
             }
-            $strem = DB::table('streams')->where('name', 'ilike', $data_val[5])->where('course_id',$courseid)->first(); 
+            $strem = DB::table('streams')->where('name', 'ilike', trim($data_val[5]))->where('course_id',$courseid)->first(); 
             if(!$strem)
             {
                 $strem_data = [
                     'id'=>(string) Uuid::generate(4),
                     'course_id' => $courseid, 
-                    'name' => $data_val[5],
+                    'name' => trim($data_val[5]),
                 ];
 
                 $strem_info =  Stream::create($strem_data);
@@ -266,12 +266,12 @@ class StudentController extends Controller
                 $stremid =  $strem->id;
             } 
             //year
-            $year = DB::table('years')->where('name', 'ilike', $data_val[6])->first(); 
+            $year = DB::table('years')->where('name', 'ilike', trim($data_val[6]))->first(); 
             if(!$year)
             {
                 $yr_data = [
                     'id'=>(string) Uuid::generate(4),
-                    'name' => $data_val[6],
+                    'name' => trim($data_val[6]),
                 ];
 
                 $year_info =  Year::create($yr_data);
@@ -281,12 +281,12 @@ class StudentController extends Controller
                 $yrid =  $year->id;
             }
 
-            $sem = DB::table('semesters')->where('name', 'ilike', $data_val[7])->first(); 
+            $sem = DB::table('semesters')->where('name', 'ilike', trim($data_val[7]))->first(); 
             if(!$sem)
             {
                 $sem_data = [
                     'id'=>(string) Uuid::generate(4),
-                    'name' => $data_val[7],
+                    'name' => trim($data_val[7]),
                 ];
 
                 $sem_info =  Semester::create($sem_data);
@@ -301,10 +301,10 @@ class StudentController extends Controller
             {
                 $student_data = [
                     'id'=>(string) Uuid::generate(4),
-                    'enrollment' => $data_val[0],
-                    'name' => $data_val[1],
-                    'father_name' => $data_val[2],
-                    'mother_name' => $data_val[3],
+                    'enrollment' => trim($data_val[0]),
+                    'name' => trim($data_val[1]),
+                    'father_name' => trim($data_val[2]),
+                    'mother_name' => trim($data_val[3]),
                     'course_id' => $courseid,
                     'stream_id' => $stremid,
                 ];
@@ -319,8 +319,8 @@ class StudentController extends Controller
                     'year_id' => $yrid,
                     'semester_id' => $semid,
                     'student_id' => $stdudent_id,
-                    'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
-                    'result' => $data_val[8],
+                    'marksheet_src' => trim($data_val[0]).'-'.trim($data_val[6]).'-'.str_replace(" ","-",trim($data_val[7])).'.pdf',
+                    'result' => trim($data_val[8]),
                 ];
 
                 Marksheet::create($marksheet_data);
@@ -332,8 +332,8 @@ class StudentController extends Controller
                 //dd($student->id);
                 $student_data = [
                     'name' => $student->name,
-                    'father_name' => ($data_val[2]!='')?$data_val[2]:$student->father_name,
-                    'mother_name' => ($data_val[3]!='')?$data_val[3]:$student->mother_name,
+                    'father_name' => ($data_val[2]!='')?trim($data_val[2]):$student->father_name,
+                    'mother_name' => ($data_val[3]!='')?trim($data_val[3]):$student->mother_name,
                     'course_id' => $courseid,
                     'stream_id' => $stremid,
                 ]; 
@@ -348,15 +348,15 @@ class StudentController extends Controller
                         'year_id' => $yrid,
                         'semester_id' => $semid,
                         'student_id' => $student->id,
-                        'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
-                        'result' => $data_val[8],
+                        'marksheet_src' => trim($data_val[0]).'-'.trim($data_val[6]).'-'.str_replace(" ","-",trim($data_val[7])).'.pdf',
+                        'result' => trim($data_val[8]),
                     ]; 
                     Marksheet::create($marksheet_data); 
                 }
                 else{
                    $marksheet_data = [
-                        'marksheet_src' => $data_val[0].'-'.$data_val[6].'-'.str_replace(" ","-",$data_val[7]).'.pdf',
-                        'result' => $data_val[8],
+                        'marksheet_src' => trim($data_val[0]).'-'.trim($data_val[6]).'-'.str_replace(" ","-",trim($data_val[7])).'.pdf',
+                        'result' => trim($data_val[8]),
                     ];
                 Marksheet::where('id', $marksheet->id)
                     ->update($marksheet_data);
