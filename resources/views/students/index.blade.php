@@ -107,7 +107,7 @@
                             <td>{{ $student->enrollment }}</td>
                             <td>{{ $student->father_name }}</td>
                             <td>{{ $student->mother_name }}</td>
-                            <td>{{ (date('d-m-Y', strtotime($student->dob)) != '1970-01-01') ? date('d-m-Y', strtotime($student->dob)) : "-" }}</td>
+                            <td>{{ (date('d-m-Y', strtotime($student->dob)) != '01-01-1970') ? date('d-m-Y', strtotime($student->dob)) : "-" }}</td>
                             <td>{{ $student->course->name }}</td>
                             <td>{{ $student->stream->name ?? '-' }}</td>
                         </tr>
