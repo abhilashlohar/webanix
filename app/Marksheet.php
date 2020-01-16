@@ -33,7 +33,7 @@ class Marksheet extends Model
     public static function rules($id = '') 
     {
       return [
-          'marksheet_file' => 'required|mimes:pdf|max:2048',
+          'marksheet_file' => 'required|mimes:pdf,jpeg,jpg,png|max:2048',
           'year_id' => 'required',
           'result' => 'required',
       ];

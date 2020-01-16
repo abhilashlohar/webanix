@@ -95,7 +95,7 @@ class MarksheetController extends Controller
         $request->request->add(['marksheet_src' => $fileName]);
         $request->request->add(['student_id' => $marksheet->student_id]);
 
-        Marksheet::create($request->all());
+        $marksheet->update($request->all());
    
         return redirect()->route('students.show',$request->student_id)
             ->with('success','You have successfully upload marksheet.');
@@ -109,6 +109,15 @@ class MarksheetController extends Controller
      */
     public function destroy(Marksheet $marksheet)
     {
-        //
+        $student = $marksheet->student;
+
+        $destinationPath = public_path('uploads');
+        
+        File::delete($destinationPath.'/'.$marksheet->marksheet_src);
+
+        $marksheet->delete();
+
+        return redirect()->route('students.show',$student->id)
+                        ->with('success','Marksheet deleted successfully');
     }
 }

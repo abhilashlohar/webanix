@@ -56,7 +56,12 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Result</label>
-                            <input type="text" name="result" value="{{ $marksheet->result }}" class="form-control" placeholder="Ex.:- Pass, Failed...">
+                            <select name="result" class="form-control">
+                                <option value="">---Select Result---</option>
+                                <option value="Pass" {{ ( $marksheet->result == 'Pass' ) ? 'selected' : '' }} >Pass</option>
+                                <option value="Fail" {{ ( $marksheet->result == 'Fail' ) ? 'selected' : '' }} >Fail</option>
+                                <option value="Supplementary" {{ ( $marksheet->result == 'Supplementary' ) ? 'selected' : '' }} >Supplementary</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-12">

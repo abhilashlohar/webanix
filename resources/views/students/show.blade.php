@@ -7,7 +7,7 @@
         <div class="row mb-2">
           <div class="col-md-6 "><h4 class="screen-title float-left">Student Details</h4></div>
           <div class="col-md-6 ">
-            <a href="{{ route('marksheets.create',['student_id'=>$students->id]) }}" class="btn btn-pink float-right">Upload Marksheet</a>
+            <a href="{{ route('marksheets.create',['student_id'=>$students->id]) }}" class="btn btn-pink float-right">Upload New Marksheet</a>
           </div>
         </div>
         <div class="card">
@@ -50,23 +50,37 @@
                 <table class="table table-sm">
                   <thead>
                     <tr>
+                      <th scope="col">Year</th>
                       <th scope="col">Semester</th>
                       <th scope="col">Result</th>
-                      <th scope="col">Year</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     @foreach ( $students->marksheets as $marksheet)
                     <tr>
+                      <td>{{ $marksheet->year->name }}</td>
                       <td>{{ $marksheet->semester->name ?? '-' }}</td>
                       <td>{{ $marksheet->result }}</td>
-                      <td>{{ $marksheet->year->name }}</td>
                       <td>
-                        <a class="btn btn-sm btn-light" href="{{ route('marksheets.edit',$marksheet->id) }}">
-                          <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{{ asset('uploads/'.$marksheet->marksheet_src) }}" download>Download</a></td>
+                        <table>
+                            <tr>
+                                <td>
+                                    <!-- <a class="btn btn-sm btn-light" href="{{ route('marksheets.edit',$marksheet->id) }}">Edit</a> -->
+                                </td>
+                                <td>
+                                    <form action="{{ route('marksheets.destroy',$marksheet->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="{{ asset('uploads/'.$marksheet->marksheet_src) }}" class="btn btn-sm btn-warning" download>Download</a>
+                                </td>
+                            </tr>
+                        </table>
+                      </td>
                     </tr>
                     @endforeach
                   </tbody>
