@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 class Marksheet extends Model
 {
     protected $fillable = [
-        'student_id','semester_id','year_id','marksheet_src','result'
+        'student_id','semester_id','year_id','marksheet_src','result','session'
     ];
 
 

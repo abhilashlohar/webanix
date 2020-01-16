@@ -61,6 +61,16 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label>Session</label>
+                            <select name="session" class="form-control">
+                                <option value="">---Select Session---</option>
+                                <option value="winter">Winter</option>
+                                <option value="summer">Summer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label>Upload Marksheet</label>
                             <input type="file" name="marksheet_file" class="form-control">
                         </div>
