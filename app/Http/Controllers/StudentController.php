@@ -332,6 +332,7 @@ class StudentController extends Controller
                     'student_id' => $stdudent_id,
                     'marksheet_src' => trim($data_val[0]).'-'.trim($data_val[6]).'-'.str_replace(" ","-",trim($data_val[7])).'.pdf',
                     'result' => trim($data_val[8]),
+                    'session' => strtolower(trim($data_val[9]))
                 ];
 
                 Marksheet::create($marksheet_data);
@@ -361,6 +362,7 @@ class StudentController extends Controller
                         'student_id' => $student->id,
                         'marksheet_src' => trim($data_val[0]).'-'.trim($data_val[6]).'-'.str_replace(" ","-",trim($data_val[7])).'.pdf',
                         'result' => trim($data_val[8]),
+                        'session' => strtolower(trim($data_val[9]))
                     ]; 
                     Marksheet::create($marksheet_data); 
                 }

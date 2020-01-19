@@ -1,5 +1,5 @@
 <?php
-$data = "enrolment_n,name,fathers_name,mothers_name,course,stream,year,Sem,Result,\n";
+$data = "enrolment_n,name,fathers_name,mothers_name,course,stream,year,Sem,Result,Session,\n";
 
 
 header('Content-Type: application/csv');
