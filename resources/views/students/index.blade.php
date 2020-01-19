@@ -115,6 +115,8 @@
                         @endforeach
                     </table>
                     {!! $students->links() !!}
+                    {{ $students->appends($_GET)->links() }}
+                    {!! $students->appends($_GET)->links() !!}
 
                 </div>
             </div>
