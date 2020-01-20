@@ -95,6 +95,7 @@
                             <th>DOB</th>
                             <th>Course</th>
                             <th>Stream</th>
+                            <th>Action</th>
                         </tr>
 
                         @foreach ($students as $student)
@@ -110,6 +111,11 @@
                             <td>{{ (date('d-m-Y', strtotime($student->dob)) != '01-01-1970') ? date('d-m-Y', strtotime($student->dob)) : "-" }}</td>
                             <td>{{ $student->course->name }}</td>
                             <td>{{ $student->stream->name ?? '-' }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-light" href="{{ route('students.edit',$student->id) }}">
+                                      <i class="fas fa-edit"></i>
+                                    </a>
+                            </td>
                         </tr>
                         @endforeach
                     </table>
