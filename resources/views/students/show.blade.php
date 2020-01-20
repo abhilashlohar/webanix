@@ -52,6 +52,7 @@
                     <tr>
                       <th scope="col">Year</th>
                       <th scope="col">Semester</th>
+                      <th scope="col">Session</th>
                       <th scope="col">Result</th>
                       <th>Action</th>
                     </tr>
@@ -61,12 +62,13 @@
                     <tr>
                       <td>{{ $marksheet->year->name }}</td>
                       <td>{{ $marksheet->semester->name ?? '-' }}</td>
+                      <td>{{ $marksheet->session }}</td>
                       <td>{{ $marksheet->result }}</td>
                       <td>
                         <table>
                             <tr>
                                 <td>
-                                    <!-- <a class="btn btn-sm btn-light" href="{{ route('marksheets.edit',$marksheet->id) }}">Edit</a> -->
+                                    <a class="btn btn-sm btn-light" href="{{ route('marksheets.edit',$marksheet->id) }}">Edit</a>
                                 </td>
                                 <td>
                                     <form action="{{ route('marksheets.destroy',$marksheet->id) }}" method="POST">

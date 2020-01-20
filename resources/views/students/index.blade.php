@@ -86,6 +86,7 @@
                   <a href="{{ route('students.importmarksheet') }}" class="float-right"> Import Students</a>
                 </div>
                 <div class="card-body">
+                    <p>Showing total {{ $students->total() }} students</p>
                    <table class="table table-sm">
                         <tr>
                             <th>Name</th>
@@ -119,7 +120,8 @@
                         </tr>
                         @endforeach
                     </table>
-                    {!! $students->links() !!}
+                    {!! $students->appends($_GET)->links() !!}
+
                 </div>
             </div>
           </div>
