@@ -21,31 +21,66 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-         $courses = Course::all()->where('deleted', false);
-         $streams = Stream::all()->where('deleted', false)->where('course_id', $request->course_id);
+        $courses = Course::all()->where('deleted', false);
 
-         $students = Student::with('course','stream')->where(function($q) use ($request) {
-                if ($request->has('enrollment') and $request->enrollment) {
-                    $q->where('enrollment', 'ILIKE', '%'.$request->enrollment.'%');
-                }
-                if ($request->has('name') and $request->name) {
-                    $q->where('name', 'ILIKE', '%'.$request->name.'%');
-                }
-                if ($request->has('father_name') and $request->father_name) {
-                    $q->where('father_name', 'ILIKE', '%'.$request->father_name.'%');
-                }
-                if ($request->has('mother_name') and $request->mother_name) {
-                    $q->where('mother_name', 'ILIKE', '%'.$request->mother_name.'%');
-                }
-                if ($request->has('course_id') and $request->course_id) {
-                    $q->where('course_id', '=', $request->course_id);
-                }
-                if ($request->has('stream_id') and $request->stream_id) {
-                    $q->where('stream_id', '=', $request->stream_id);
-                }
-        })->paginate(100);
+        $streams = Stream::all()->where('deleted', false)
+                            ->where('course_id', $request->course_id);
 
-        return view('students.index',compact('students', 'courses', 'request', 'streams'))
+        $years = Year::all()->where('deleted', false);
+
+        $semesters = Semester::all()->where('deleted', false);
+        if($request->year_id)
+        { 
+        $whereClause = ['course','stream','marksheets'=>function($query) use($request) {
+            $query->where('marksheets.id','=',$request->year_id);
+        }];
+        }else{
+            $whereClause=['course','stream','marksheets'];
+        }
+
+         $student_details = Student::with('course','stream');
+         if($request->year_id || $request->session || $request->semester_id)
+         {
+            $student_details->join('marksheets', function ($join)use ($request) {
+            $join->on('students.id', '=', 'marksheets.student_id');
+                if ($request->has('year_id') and $request->year_id) {
+                 $join->where('marksheets.year_id', '=', $request->year_id);
+                }
+                if ($request->has('session') and $request->session) {
+                 $join->where('marksheets.session', '=', $request->session);
+                }
+                if ($request->has('semester_id') and $request->semester_id) {
+                 $join->where('marksheets.semester_id', '=', $request->semester_id);
+                }
+            });
+         }
+         $students = $student_details->where(function($q) use ($request) {
+                            if ($request->has('enrollment') and $request->enrollment) {
+                                $q->where('enrollment', 'ILIKE', '%'.$request->enrollment.'%');
+                            }
+                            if ($request->has('year_id') and $request->year_id) {
+                                $q->where('year_id', $request->year_id);
+                            }
+                            if ($request->has('name') and $request->name) {
+                                $q->where('name', 'ILIKE', '%'.$request->name.'%');
+                            }
+                            if ($request->has('father_name') and $request->father_name) {
+                                $q->where('father_name', 'ILIKE', '%'.$request->father_name.'%');
+                            }
+                            if ($request->has('mother_name') and $request->mother_name) {
+                                $q->where('mother_name', 'ILIKE', '%'.$request->mother_name.'%');
+                            }
+                            if ($request->has('course_id') and $request->course_id) {
+                                $q->where('course_id', '=', $request->course_id);
+                            }
+                            if ($request->has('stream_id') and $request->stream_id) {
+                                $q->where('stream_id', '=', $request->stream_id);
+                            }
+                        })
+                        ->distinct('students.id')
+                        ->paginate(100);
+        
+        return view('students.index',compact('students', 'courses', 'request', 'streams','years','semesters'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
         
     }

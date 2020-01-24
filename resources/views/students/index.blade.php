@@ -21,7 +21,7 @@
                                 <input type="text" name="enrollment" value="{{ $request->enrollment }}" class="form-control">
                             </div>
                         </div>
-                         <div class="col-md-3">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Student Name</label>
                                 <input type="text" name="name" value="{{ $request->name }}" class="form-control">
@@ -65,7 +65,42 @@
                                 </select>
                             </div>
                         </div>
-
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Year</label>
+                                <select name="year_id" id="year_id" class="form-control">
+                                    <option value="">---Select Year---</option>
+                                    @foreach ($years as $year)
+                                        <option 
+                                        value="{{ $year->id }}"
+                                        {{ ( $request->year_id == $year->id ) ? 'selected' : '' }}>{{ $year->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Session</label>
+                                <select name="session" class="form-control">
+                                    <option value="">---Select Session---</option>
+                                    <option value="winter" {{ ( $request->session == 'winter' ) ? 'selected' : '' }}>Winter</option>
+                                    <option value="summer" {{ ( $request->session == 'summer' ) ? 'selected' : '' }}>Summer</option>
+                                </select>
+                        </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Semester</label>
+                                <select name="semester_id" id="year_id" class="form-control">
+                                    <option value="">---Select Semester---</option>
+                                    @foreach ($semesters as $semester)
+                                        <option 
+                                        value="{{ $semester->id }}"
+                                        {{ ( $request->semester_id == $semester->id ) ? 'selected' : '' }}>{{ $semester->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                           <button type="submit" class="btn btn-primary">Search</button>
                         </div>
