@@ -30,6 +30,9 @@
     <a class="navbar-brand col-sm-3 col-md-2 mr-0 logo" href="#">WEBANIX</a>
     <ul class="nav justify-content-end mr-3">
       <li class="nav-item mr-3" style="padding: 5px; color: #4d384b;">
+        <a href="{{ route('students.report') }}"> Report</a>
+      </li>
+      <li class="nav-item mr-3" style="padding: 5px; color: #4d384b;">
         <span>Welcome, {{ Auth::user()->name }}</span>
       </li>
       <li class="nav-item">

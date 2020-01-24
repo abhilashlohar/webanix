@@ -23,6 +23,7 @@ Route::get('/importMarksheet', 'StudentController@importmarksheet')->name('stude
 Route::get('/sample', 'StudentController@sample')->name('students.sample');
 Route::post('/Student/savemarksheet', 'StudentController@savemarksheet')->name('students.savemarksheet');
 Route::post('/Student/saveDetail', 'StudentController@saveDetail')->name('students.saveDetail');
+Route::get('/report', 'StudentController@report')->name('students.report');
 
 Route::resource('years','YearController');
 Route::resource('courses','CourseController');

@@ -420,4 +420,84 @@ class StudentController extends Controller
     {
       return view('students.sample');
     }
+
+    public function report(Request $request)
+    {
+        $student = Student::join('marksheets', function ($join)use ($request) {
+            $join->on('students.id', '=', 'marksheets.student_id');
+                if ($request->has('year_id') and $request->year_id) {
+                 $join->where('marksheets.year_id', '=', $request->year_id);
+                }
+            })
+            ->distinct('students.id');
+       
+        $marksheets = Marksheet::where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                        })->get();
+        
+        $results = Marksheet::select('result' ,DB::raw('count(result) as total'))
+                             ->where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                        })
+                        ->groupBy('result')
+                        ->get();
+        $result_info=[];
+        if(!empty($results))
+        {
+            foreach($results as $result)
+            {
+                if($result->result=='Pass')
+                {
+                     $result_info['Pass'] = $result->total;
+                }
+                if($result->result=='Fail')
+                {
+                     $result_info['Fail'] = $result->total;
+                }
+                if($result->result=='Supplementary')
+                {
+                     $result_info['Supplementary'] = $result->total;
+                }
+            }
+        }
+        $sessions = Marksheet::select('session' ,DB::raw('count(session) as total'))
+                             ->where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                        })
+                        ->groupBy('session')
+                        ->get();
+        $session_info=[];
+        if(!empty($sessions))
+        {
+            foreach($sessions as $session)
+            {
+                if($session->session=='winter')
+                {
+                     $session_info['winter'] = $session->total;
+                }
+                if($session->session=='summer')
+                {
+                     $session_info['summer'] = $session->total;
+                }
+            }
+        }
+
+        $course_wise_students = Student::select(DB::raw('count(id) as total'))
+            ->join('marksheets', function ($join)use ($request) {
+            $join->on('students.id', '=', 'marksheets.student_id');
+                if ($request->has('year_id') and $request->year_id) {
+                 $join->where('marksheets.year_id', '=', $request->year_id);
+                }
+            })
+            ->groupBy('course_id')
+            ->distinct('students.id');
+            
+        return view('students.report',compact('student','marksheets','result_info','session_info'));
+    }
 }
