@@ -24,6 +24,7 @@ Route::get('/sample', 'StudentController@sample')->name('students.sample');
 Route::post('/Student/savemarksheet', 'StudentController@savemarksheet')->name('students.savemarksheet');
 Route::post('/Student/saveDetail', 'StudentController@saveDetail')->name('students.saveDetail');
 Route::get('/report', 'StudentController@report')->name('students.report');
+Route::get('/summery', 'StudentController@summery')->name('students.summery');
 
 Route::resource('years','YearController');
 Route::resource('courses','CourseController');

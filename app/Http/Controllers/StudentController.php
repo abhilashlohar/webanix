@@ -521,4 +521,21 @@ class StudentController extends Controller
         $years = Year::all()->where('deleted', false);   
         return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students'));
     }
+
+    public function summery(Request $request)
+    {
+
+        $where= [];
+        if ($request->has('year_id') and $request->year_id) {
+            $where['marksheets.year_id'] = $request->year_id;
+        }
+
+        $students = Student::leftJoin('marksheets', 'students.id', '=', 'marksheets.student_id')
+                    ->where($where)
+                    ->select('student_id', DB::raw('COUNT(student_id) as total_students'))
+                    ->get();
+       dd($students);
+
+       return view('students.summery');
+    }
 }
