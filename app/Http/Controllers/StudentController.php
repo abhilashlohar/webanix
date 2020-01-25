@@ -30,7 +30,7 @@ class StudentController extends Controller
 
         $semesters = Semester::all()->where('deleted', false);
         if($request->year_id)
-        { 
+        {
         $whereClause = ['course','stream','marksheets'=>function($query) use($request) {
             $query->where('marksheets.id','=',$request->year_id);
         }];
@@ -79,10 +79,10 @@ class StudentController extends Controller
                         })
                         ->distinct('students.id')
                         ->paginate(100);
-        
+
         return view('students.index',compact('students', 'courses', 'request', 'streams','years','semesters'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
-        
+
     }
 
 
@@ -108,9 +108,9 @@ class StudentController extends Controller
     {
         $request->validate(Student::rules(), Student::messages());
 
-  
+
         Student::create($request->all());
-   
+
         return redirect()->route('students.index')
                         ->with('success','Student added successfully.');
     }
@@ -157,9 +157,9 @@ class StudentController extends Controller
     {
         $request->validate(Student::rules($student->id), Student::messages());
 
-  
+
         $student->update($request->all());
-   
+
         return redirect()->route('students.index')
                         ->with('success','Student updated successfully.');
     }
@@ -174,20 +174,20 @@ class StudentController extends Controller
     {
         //
     }
-	
+
 	public function importmarksheet()
     {
         $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
         return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
     }
-	
+
 	public function savemarksheet(Request $request)
     {
       $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
-	  if ($request->hasFile('marksheet_file')) {   
-		    $file = $request->file('marksheet_file'); 
+	  if ($request->hasFile('marksheet_file')) {
+		    $file = $request->file('marksheet_file');
             $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
-            
+
             if($ext!='csv')
             {
                 return redirect()->route('students.importmarksheet')
@@ -195,7 +195,7 @@ class StudentController extends Controller
                 //return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
             }
 		    $name = time().'-'.$file->getClientOriginalName();
-		    $file_path = $file->getPathName(); 
+		    $file_path = $file->getPathName();
 		  	$csv_read_file = fopen($file_path, "r");
 			$i=1;
             $arrCheck=[];
@@ -220,15 +220,15 @@ class StudentController extends Controller
                     }
                     //course check
                     $course = DB::table('courses')->where('name', 'ilike',trim($column[4]))->first();
-                    
+
                     if(!$course)
-                    {  
-                        $courseArr[]= $column[4];    
+                    {
+                        $courseArr[]= $column[4];
                     }
                     else{
                         $flag=1;
                        //strem check
-                        $strem = DB::table('streams')->where('name', 'ilike', trim($column[5]))->where('course_id',$course->id)->first(); 
+                        $strem = DB::table('streams')->where('name', 'ilike', trim($column[5]))->where('course_id',$course->id)->first();
                         if(!$strem)
                         {
                             $flag=1;
@@ -236,39 +236,39 @@ class StudentController extends Controller
                         }
                     }
                     //year
-                    $year = DB::table('years')->where('name', 'ilike', trim($column[6]))->first(); 
+                    $year = DB::table('years')->where('name', 'ilike', trim($column[6]))->first();
                     if(!$year)
                     {
                         $flag=1;
                         $yrArr[] = $column[6];
                     }
                     //semester check
-                    $sem = DB::table('semesters')->where('name', 'ilike', trim($column[7]))->first(); 
+                    $sem = DB::table('semesters')->where('name', 'ilike', trim($column[7]))->first();
                     if(!$sem)
                     {
                         $flag=1;
                         if($column[7]!=''){ $semArr[] = $column[7];}
                     }
                 }
-				
+
 			$i++;
-			} 
-            
+			}
+
             return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
 	  }
 	  else{
-		  
+
 	  }
-	  
+
     }
-	
+
     public  function saveDetail(Request $request)
     {
         $data = json_decode($request['csvdetail']);
 
-        
+
         foreach($data as $key => $data_val)
-        { 
+        {
 
             $student = DB::table('students')->where('enrollment', trim($data_val[0]))->first();
             $course = DB::table('courses')->where('name', 'ilike',trim($data_val[4]))->first();
@@ -285,14 +285,14 @@ class StudentController extends Controller
             else{
                 $courseid =  $course->id;
             }
-            $strem = DB::table('streams')->where('name', 'ilike', trim($data_val[5]))->where('course_id',$courseid)->first(); 
+            $strem = DB::table('streams')->where('name', 'ilike', trim($data_val[5]))->where('course_id',$courseid)->first();
             if(!$strem)
             {
                 if($data_val[5]!='')
                 {
                     $strem_data = [
                         'id'=>(string) Uuid::generate(4),
-                        'course_id' => $courseid, 
+                        'course_id' => $courseid,
                         'name' => trim($data_val[5]),
                     ];
 
@@ -305,9 +305,9 @@ class StudentController extends Controller
             }
             else{
                 $stremid =  $strem->id;
-            } 
+            }
             //year
-            $year = DB::table('years')->where('name', 'ilike', trim($data_val[6]))->first(); 
+            $year = DB::table('years')->where('name', 'ilike', trim($data_val[6]))->first();
             if(!$year)
             {
                 $yr_data = [
@@ -322,7 +322,7 @@ class StudentController extends Controller
                 $yrid =  $year->id;
             }
 
-            $sem = DB::table('semesters')->where('name', 'ilike', trim($data_val[7]))->first(); 
+            $sem = DB::table('semesters')->where('name', 'ilike', trim($data_val[7]))->first();
             if(!$sem)
             {
                 if($data_val[7]!="")
@@ -371,11 +371,11 @@ class StudentController extends Controller
                 ];
 
                 Marksheet::create($marksheet_data);
-               
+
             }
             else{
 
-                //$student = Student::where('id',$student->id)->get(); 
+                //$student = Student::where('id',$student->id)->get();
                 //dd($student->id);
                 $student_data = [
                     'name' => $student->name,
@@ -383,11 +383,11 @@ class StudentController extends Controller
                     'mother_name' => ($data_val[3]!='')?trim($data_val[3]):$student->mother_name,
                     'course_id' => $courseid,
                     'stream_id' => $stremid,
-                ]; 
+                ];
                 Student::where('id', $student->id)
                     ->update($student_data);
                //$student->update($student_data);
-                $marksheet = DB::table('marksheets') ->where('year_id', $yrid)->where('semester_id', $semid)->where('student_id', $student->id)->first(); 
+                $marksheet = DB::table('marksheets') ->where('year_id', $yrid)->where('semester_id', $semid)->where('student_id', $student->id)->first();
                 if(!$marksheet)
                 {
                     $marksheet_data = [
@@ -398,8 +398,8 @@ class StudentController extends Controller
                         'marksheet_src' => trim($data_val[0]).'-'.trim($data_val[6]).'-'.str_replace(" ","-",trim($data_val[7])).'.pdf',
                         'result' => trim($data_val[8]),
                         'session' => strtolower(trim($data_val[9]))
-                    ]; 
-                    Marksheet::create($marksheet_data); 
+                    ];
+                    Marksheet::create($marksheet_data);
                 }
                 else{
                    $marksheet_data = [
@@ -430,13 +430,13 @@ class StudentController extends Controller
                 }
             })
             ->distinct('students.id');
-       
+
         $marksheets = Marksheet::where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
                                  $q->where('year_id', '=', $request->year_id);
                                 }
                         })->get();
-        
+
         $results = Marksheet::select('result' ,DB::raw('count(result) as total'))
                              ->where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
@@ -511,31 +511,113 @@ class StudentController extends Controller
                             ->with('year')
                             ->groupBy('year_id')
                             ->get();
-       
-        
+
+
         $stream_wise_students = Student::select('stream_id',DB::raw('count(id) as total'))
                                     ->with('stream')
                                     ->groupBy('stream_id')
                                     ->get();
         //year
-        $years = Year::all()->where('deleted', false);   
+        $years = Year::all()->where('deleted', false);
         return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students'));
     }
 
     public function summery(Request $request)
     {
 
-        $where= [];
-        if ($request->has('year_id') and $request->year_id) {
-            $where['marksheets.year_id'] = $request->year_id;
-        }
+        $student = Student::leftJoin('marksheets', function ($join)use ($request) {
+            $join->on('students.id', '=', 'marksheets.student_id');
+                if ($request->has('year_id') and $request->year_id) {
+                 $join->where('marksheets.year_id', '=', $request->year_id);
+                }
+            })
+            ->distinct('students.id')
+            ->count();
 
-        $students = Student::leftJoin('marksheets', 'students.id', '=', 'marksheets.student_id')
-                    ->where($where)
-                    ->select('student_id', DB::raw('COUNT(student_id) as total_students'))
-                    ->get();
-       dd($students);
+        $marksheets = Marksheet::where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                        })
+                        ->count();
 
-       return view('students.summery');
+        $result_pass = Marksheet::where('result', 'Pass')
+        ->where(function($q) use ($request) {
+            if ($request->has('year_id') and $request->year_id) {
+                $q->where('year_id', '=', $request->year_id);
+                }
+        })
+        ->count();
+
+        $result_supplementary = Marksheet::where('result', 'Supplementary')
+        ->where(function($q) use ($request) {
+            if ($request->has('year_id') and $request->year_id) {
+                $q->where('year_id', '=', $request->year_id);
+                }
+        })
+        ->count();
+
+        $result_fail = Marksheet::where('result', 'Fail')
+        ->where(function($q) use ($request) {
+            if ($request->has('year_id') and $request->year_id) {
+                $q->where('year_id', '=', $request->year_id);
+                }
+        })
+        ->count();
+
+        $session_winter = Marksheet::where('session', 'winter')
+        ->where(function($q) use ($request) {
+            if ($request->has('year_id') and $request->year_id) {
+                $q->where('year_id', '=', $request->year_id);
+                }
+        })
+        ->count();
+
+        $session_summer = Marksheet::where('session', 'summer')
+        ->where(function($q) use ($request) {
+            if ($request->has('year_id') and $request->year_id) {
+                $q->where('year_id', '=', $request->year_id);
+                }
+        })
+        ->count();
+
+
+
+
+        /*$course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
+            ->join('marksheets', function ($join)use ($request) {
+            $join->on('students.id', '=', 'marksheets.student_id');
+                if ($request->has('year_id') and $request->year_id) {
+                 $join->where('marksheets.year_id', '=', $request->year_id);
+                }
+            })
+            ->groupBy('course_id')
+            ->distinct('students.id');*/
+
+
+        $course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
+                                    ->with('course')
+                                    ->groupBy('course_id')
+                                    ->get();
+
+        $year_wise_students = Marksheet::select('year_id' ,DB::raw('count(student_id) as total'))
+                             ->where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                             })
+                            ->with('year')
+                            ->groupBy('year_id')
+                            ->get();
+
+
+        $stream_wise_students = Student::select('stream_id',DB::raw('count(id) as total'))
+                                    ->with('stream')
+                                    ->groupBy('stream_id')
+                                    ->get();
+        //year
+        $years = Year::all()->where('deleted', false);
+
+        return view('students.summery',compact('student','marksheets','result_pass','result_fail','result_supplementary','session_winter', 'session_summer', 'years','request','course_wise_students','year_wise_students','stream_wise_students'));
     }
 }
