@@ -488,7 +488,7 @@ class StudentController extends Controller
             }
         }
 
-        $course_wise_students = Student::select(DB::raw('count(id) as total'))
+        /*$course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
             ->join('marksheets', function ($join)use ($request) {
             $join->on('students.id', '=', 'marksheets.student_id');
                 if ($request->has('year_id') and $request->year_id) {
@@ -496,8 +496,29 @@ class StudentController extends Controller
                 }
             })
             ->groupBy('course_id')
-            ->distinct('students.id');
+            ->distinct('students.id');*/
+        $course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
+                                    ->with('course')
+                                    ->groupBy('course_id')
+                                    ->get();
+
+        $year_wise_students = Marksheet::select('year_id' ,DB::raw('count(student_id) as total'))
+                             ->where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                             })
+                            ->with('year')
+                            ->groupBy('year_id')
+                            ->get();
+       
+        
+        $stream_wise_students = Student::select('stream_id',DB::raw('count(id) as total'))
+                                    ->with('stream')
+                                    ->groupBy('stream_id')
+                                    ->get();
+        //year
         $years = Year::all()->where('deleted', false);   
-        return view('students.report',compact('student','marksheets','result_info','session_info','years','request'));
+        return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students'));
     }
 }

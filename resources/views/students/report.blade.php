@@ -51,33 +51,56 @@
       </div>
   </div>
 </div>
-   <div class="row top-cls">
-    <div class="col-md-4">
+   <div class="row ">
+    <div class="col-md-4 top-cls">
       <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
         <span style="font-size: 40px;color: #FF6468;">{{ (!empty($result_info['Fail']))?$result_info['Fail']:'0' }}</span><br>
         <span style="font-size: 16px;color: #4D384B;">Total Failed</span>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 top-cls">
       <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
         <span style="font-size: 40px;color: #FF6468;">{{ (!empty($result_info['Supplementary']))?$result_info['Supplementary']:'0' }}</span><br>
         <span style="font-size: 16px;color: #4D384B;">Total Supplementary</span>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 top-cls">
       <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
         <span style="font-size: 40px;color: #FF6468;">{{ (!empty($session_info['summer']))?$session_info['summer']:'0' }}</span><br>
         <span style="font-size: 16px;color: #4D384B;">Summer</span>
       </div>
     </div>
    </div>
-   <div class="row top-cls">
-    <div class="col-md-4">
+   <div class="row ">
+    <div class="col-md-4 top-cls">
       <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
         <span style="font-size: 40px;color: #FF6468;">{{ (!empty($session_info['winter']))?$session_info['winter']:'0' }}</span><br>
         <span style="font-size: 16px;color: #4D384B;">Winter</span>
       </div>
     </div>
-    
+    @foreach ($course_wise_students as $course_stu)
+       <div class="col-md-4 top-cls">
+          <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+            <span style="font-size: 40px;color: #FF6468;">{{ $course_stu->total }}</span><br>
+            <span style="font-size: 16px;color: #4D384B;">{{ $course_stu->course->name }}</span>
+          </div>
+        </div>
+    @endforeach
+    @foreach ($year_wise_students as $yr_stu)
+     <div class="col-md-4 top-cls">
+          <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+            <span style="font-size: 40px;color: #FF6468;">{{ $yr_stu->total }}</span><br>
+            <span style="font-size: 16px;color: #4D384B;">{{ $yr_stu->year->name }}</span>
+          </div>
+        </div>
+    @endforeach
+    @foreach ($stream_wise_students as $stram_stu)
+     <div class="col-md-4 top-cls">
+          <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+            <span style="font-size: 40px;color: #FF6468;">{{ $stram_stu->total }}</span><br>
+            <span style="font-size: 16px;color: #4D384B;">{{ $stram_stu->stream->name }}</span>
+          </div>
+        </div>
+    @endforeach
    </div>
 @endsection
