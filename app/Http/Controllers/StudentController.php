@@ -497,7 +497,7 @@ class StudentController extends Controller
             })
             ->groupBy('course_id')
             ->distinct('students.id');
-            
-        return view('students.report',compact('student','marksheets','result_info','session_info'));
+        $years = Year::all()->where('deleted', false);   
+        return view('students.report',compact('student','marksheets','result_info','session_info','years','request'));
     }
 }

@@ -6,6 +6,32 @@
 </style>
 @section('content')
 <div class="row">
+    <div class="col-md-12">
+    <form action="{{ route('students.report') }}" method="GET">
+                  
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Year</label>
+                    <select name="year_id" id="year_id" class="form-control">
+                        <option value="">---Select Year---</option>
+                        @foreach ($years as $year)
+                            <option 
+                            value="{{ $year->id }}"
+                            {{ ( $request->year_id == $year->id ) ? 'selected' : '' }}>{{ $year->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary" style="margin-top: 12%;">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+<div class="row">
   <div class="col-md-4">
     <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
       <span style="font-size: 40px;color: #FF6468;">{{ $student->count() }}</span><br>
