@@ -3,6 +3,23 @@
     .top-cls{
         margin-top: 1%;
     }
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width:100
+    text-align:center;  }
+    .sidebar{
+        disply:none;
+    }
+}
 </style>
 @section('content')
 <div class="row">
@@ -26,11 +43,14 @@
             
             <div class="col-md-3">
               <button type="submit" class="btn btn-primary" style="margin-top: 12%;">Search</button>
+              <button type="button" onclick="myFunction()" class="btn btn-primary" style="margin-top: 12%;">Ptint</button>
             </div>
+           
         </div>
     </form>
 </div>
 </div>
+<div id="section-to-print">
 <div class="row">
   <div class="col-md-4">
     <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
@@ -86,6 +106,7 @@
           </div>
         </div>
     @endforeach
+    @if($request->year_id=='')
     @foreach ($year_wise_students as $yr_stu)
      <div class="col-md-4 top-cls">
           <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
@@ -94,6 +115,7 @@
           </div>
         </div>
     @endforeach
+    @endif
     @foreach ($stream_wise_students as $stram_stu)
      <div class="col-md-4 top-cls">
           <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
@@ -103,4 +125,10 @@
         </div>
     @endforeach
    </div>
+</div>
 @endsection
+<script>
+function myFunction() {
+  window.print();
+}
+</script>

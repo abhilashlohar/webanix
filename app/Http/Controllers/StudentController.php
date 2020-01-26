@@ -423,20 +423,27 @@ class StudentController extends Controller
 
     public function report(Request $request)
     {
-        $student = Student::join('marksheets', function ($join)use ($request) {
-            $join->on('students.id', '=', 'marksheets.student_id');
-                if ($request->has('year_id') and $request->year_id) {
-                 $join->where('marksheets.year_id', '=', $request->year_id);
-                }
-            })
-            ->distinct('students.id');
+        //Student Count
+        $query = Student::leftJoin('marksheets', function($join) use ($request)
+                         {
+                             $join->on('marksheets.student_id', '=', 'students.id');
+                             if ($request->has('year_id') and $request->year_id) {
+                              $join->where('marksheets.year_id', '=', $request->year_id);
+                             }
+                         });
+                    if ($request->has('year_id') and $request->year_id) { 
+                      $query->where('marksheets.student_id', '!=', NULL);
+                    }
+        $student =  $query->distinct('students.id')
+                    ->get();
 
+        //Marksheet Count
         $marksheets = Marksheet::where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
                                  $q->where('year_id', '=', $request->year_id);
                                 }
                         })->get();
-
+        //Result wise student count
         $results = Marksheet::select('result' ,DB::raw('count(result) as total'))
                              ->where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
@@ -450,20 +457,24 @@ class StudentController extends Controller
         {
             foreach($results as $result)
             {
+                //total pass students
                 if($result->result=='Pass')
                 {
                      $result_info['Pass'] = $result->total;
                 }
+                //total fail students
                 if($result->result=='Fail')
                 {
                      $result_info['Fail'] = $result->total;
                 }
+                //total supplementary students
                 if($result->result=='Supplementary')
                 {
                      $result_info['Supplementary'] = $result->total;
                 }
             }
         }
+        //Session wise count of students
         $sessions = Marksheet::select('session' ,DB::raw('count(session) as total'))
                              ->where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
@@ -487,21 +498,14 @@ class StudentController extends Controller
                 }
             }
         }
-
-        /*$course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
-            ->join('marksheets', function ($join)use ($request) {
-            $join->on('students.id', '=', 'marksheets.student_id');
-                if ($request->has('year_id') and $request->year_id) {
-                 $join->where('marksheets.year_id', '=', $request->year_id);
-                }
-            })
-            ->groupBy('course_id')
-            ->distinct('students.id');*/
+        
+        //Course wise student count
         $course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
                                     ->with('course')
                                     ->groupBy('course_id')
                                     ->get();
 
+        //Year wise student count
         $year_wise_students = Marksheet::select('year_id' ,DB::raw('count(student_id) as total'))
                              ->where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
@@ -512,12 +516,12 @@ class StudentController extends Controller
                             ->groupBy('year_id')
                             ->get();
 
-
+        //Stream wise student count
         $stream_wise_students = Student::select('stream_id',DB::raw('count(id) as total'))
                                     ->with('stream')
                                     ->groupBy('stream_id')
                                     ->get();
-        //year
+        //year list
         $years = Year::all()->where('deleted', false);
         return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students'));
     }
@@ -532,7 +536,7 @@ class StudentController extends Controller
                 }
             })
             ->distinct('students.id')
-            ->count();
+            ->get();
 
         $marksheets = Marksheet::where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
