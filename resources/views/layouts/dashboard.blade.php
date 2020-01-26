@@ -27,7 +27,7 @@
 
 <body class="dashboard-body" style="font-family: 'Montserrat', sans-serif;">
   <nav class="navbar sticky-top flex-md-nowrap p-0 navbar-custom">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0 logo" href="#">WEBANIX</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0 logo" href="#">{{ config('app.name', 'JRNRVU') }}</a>
     <ul class="nav justify-content-end mr-3">
       <li class="nav-item mr-3" style="padding: 5px; color: #4d384b;">
         <a href="{{ route('students.report') }}"> Report</a>
