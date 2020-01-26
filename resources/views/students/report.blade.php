@@ -14,7 +14,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    width:100
+    width:100%
     text-align:center;  }
     .sidebar{
         disply:none;
@@ -52,80 +52,109 @@
 </div>
 <div id="section-to-print">
 <div style="width:100%;text-align:center;"><h3>Student Statistics</h3></div><hr/>
-<div class="row">
-  <div class="col-md-4">
-    <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-      <span style="font-size: 40px;color: #FF6468;">{{ $student }}</span><br>
-      <span style="font-size: 16px;color: #4D384B;">No of Students</span>
-    </div>
-  </div>
-  <div class="col-md-4">
-      <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ $marksheets }}</span><br>
-        <span style="font-size: 16px;color: #4D384B;">No of Marksheets</span>
-      </div>
-  </div>
-  <div class="col-md-4">
-      <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ (!empty($result_info['Pass']))?$result_info['Pass']:'0' }}</span><br>
-        <span style="font-size: 16px;color: #4D384B;">Total Passed</span>
-      </div>
-  </div>
-</div>
-   <div class="row ">
-    <div class="col-md-4 top-cls">
-      <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ (!empty($result_info['Fail']))?$result_info['Fail']:'0' }}</span><br>
-        <span style="font-size: 16px;color: #4D384B;">Total Failed</span>
-      </div>
-    </div>
-    <div class="col-md-4 top-cls">
-      <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ (!empty($result_info['Supplementary']))?$result_info['Supplementary']:'0' }}</span><br>
-        <span style="font-size: 16px;color: #4D384B;">Total Supplementary</span>
-      </div>
-    </div>
-    <div class="col-md-4 top-cls">
-      <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ (!empty($session_info['summer']))?$session_info['summer']:'0' }}</span><br>
-        <span style="font-size: 16px;color: #4D384B;">Summer</span>
-      </div>
-    </div>
-   </div>
-   <div class="row ">
-    <div class="col-md-4 top-cls">
-      <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ (!empty($session_info['winter']))?$session_info['winter']:'0' }}</span><br>
-        <span style="font-size: 16px;color: #4D384B;">Winter</span>
-      </div>
-    </div>
+<table width="100%" border="1">
+    <tr>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+              <span style="font-size: 26px;color: #4D384B;">{{ $student }}</span><br>
+              <span style="font-size: 16px;color: #4D384B;">Total Students</span>
+            </div>
+        </td>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                <span style="font-size: 26px;color: #4D384B;">{{ $marksheets }}</span><br>
+                <span style="font-size: 16px;color: #4D384B;">Total Marksheets</span>
+            </div>
+        </td>
+    </tr>
+</table>
+<h4>MarkSheet by Result</h4>
+<table width="100%" border="1">
+    @foreach($results as $result)
+    <tr>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                  <span style="font-size: 16px;color: #4D384B;">{{ $result->result }}</span>
+            </div>
+        </td>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                <span style="font-size: 16px;color: #4D384B;">{{ $result->total }}</span>
+            </div>
+        </td>
+    </tr>
+    @endforeach
+</table>
+<h4>MarkSheet by Session</h4>
+<table width="100%" border="1">
+    @foreach($sessions as $session)
+    <tr>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                  <span style="font-size: 16px;color: #4D384B;">{{ $session->session }}</span>
+            </div>
+        </td>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                <span style="font-size: 16px;color: #4D384B;">{{ $session->total }}</span>
+            </div>
+        </td>
+    </tr>
+    @endforeach
+</table>
+<h4>MarkSheet by Course</h4>
+<table width="100%" border="1">
     @foreach ($course_wise_students as $course_stu)
-       <div class="col-md-4 top-cls">
-          <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-            <span style="font-size: 40px;color: #FF6468;">{{ $course_stu->total }}</span><br>
-            <span style="font-size: 16px;color: #4D384B;">{{ $course_stu->course->name }}</span>
-          </div>
-        </div>
+    <tr>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                  <span style="font-size: 16px;color: #4D384B;">{{ $course_stu->course->name }}</span>
+            </div>
+        </td>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                <span style="font-size: 16px;color: #4D384B;">{{ $course_stu->total }}</span>
+            </div>
+        </td>
+    </tr>
     @endforeach
-    @if($request->year_id=='')
+</table>
+@if($request->year_id=='')
+<h4>MarkSheet by Year</h4>
+<table width="100%" border="1">
     @foreach ($year_wise_students as $yr_stu)
-     <div class="col-md-4 top-cls">
-          <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-            <span style="font-size: 40px;color: #FF6468;">{{ $yr_stu->total }}</span><br>
-            <span style="font-size: 16px;color: #4D384B;">{{ $yr_stu->year->name }}</span>
-          </div>
-        </div>
+    <tr>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                  <span style="font-size: 16px;color: #4D384B;">{{ $yr_stu->year->name }}</span>
+            </div>
+        </td>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                <span style="font-size: 16px;color: #4D384B;">{{ $yr_stu->total }}</span>
+            </div>
+        </td>
+    </tr>
     @endforeach
-    @endif
-    @foreach ($stream_wise_students as $stram_stu)
-     <div class="col-md-4 top-cls">
-          <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-            <span style="font-size: 40px;color: #FF6468;">{{ $stram_stu->total }}</span><br>
-            <span style="font-size: 16px;color: #4D384B;">{{ $stram_stu->stream->name }}</span>
-          </div>
-        </div>
+</table>
+<h4>MarkSheet by Stream</h4>
+<table width="100%" border="1">
+     @foreach ($stream_wise_students as $stram_stu)
+    <tr>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                  <span style="font-size: 16px;color: #4D384B;">{{ $stram_stu->stream->name }}</span>
+            </div>
+        </td>
+        <td width="50%">
+            <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
+                <span style="font-size: 16px;color: #4D384B;">{{ $stram_stu->total }}</span>
+            </div>
+        </td>
+    </tr>
     @endforeach
-   </div>
+</table>
+ @endif
 </div>
 @endsection
 <script>

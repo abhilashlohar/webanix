@@ -453,28 +453,7 @@ class StudentController extends Controller
                         })
                         ->groupBy('result')
                         ->get();
-        $result_info=[];
-        if(!empty($results))
-        {
-            foreach($results as $result)
-            {
-                //total pass students
-                if($result->result=='Pass')
-                {
-                     $result_info['Pass'] = $result->total;
-                }
-                //total fail students
-                if($result->result=='Fail')
-                {
-                     $result_info['Fail'] = $result->total;
-                }
-                //total supplementary students
-                if($result->result=='Supplementary')
-                {
-                     $result_info['Supplementary'] = $result->total;
-                }
-            }
-        }
+        
         //Session wise count of students
         $sessions = Marksheet::select('session' ,DB::raw('count(session) as total'))
                              ->where(function($q) use ($request) {
@@ -484,21 +463,7 @@ class StudentController extends Controller
                         })
                         ->groupBy('session')
                         ->get();
-        $session_info=[];
-        if(!empty($sessions))
-        {
-            foreach($sessions as $session)
-            {
-                if($session->session=='winter')
-                {
-                     $session_info['winter'] = $session->total;
-                }
-                if($session->session=='summer')
-                {
-                     $session_info['summer'] = $session->total;
-                }
-            }
-        }
+        
         
         //Course wise student count
         $ids= [];
@@ -540,7 +505,7 @@ class StudentController extends Controller
          
         //year list
         $years = Year::all()->where('deleted', false);
-        return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students'));
+        return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions'));
     }
 
     public function summery(Request $request)
