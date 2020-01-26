@@ -435,8 +435,9 @@ class StudentController extends Controller
                       $query->where('marksheets.student_id', '!=', NULL);
                     }
         $student =  $query->distinct('students.id')
-                    ->get();
-
+                    //->get()
+                    ->count();
+        
         //Marksheet Count
         $marksheets = Marksheet::where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {

@@ -51,10 +51,11 @@
 </div>
 </div>
 <div id="section-to-print">
+<div style="width:100%;text-align:center;"><h3>Student Statistics</h3></div><hr/>
 <div class="row">
   <div class="col-md-4">
     <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-      <span style="font-size: 40px;color: #FF6468;">{{ $student->count() }}</span><br>
+      <span style="font-size: 40px;color: #FF6468;">{{ $student }}</span><br>
       <span style="font-size: 16px;color: #4D384B;">No of Students</span>
     </div>
   </div>
