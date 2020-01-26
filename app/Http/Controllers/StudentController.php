@@ -508,6 +508,7 @@ class StudentController extends Controller
         return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions'));
     }
 
+
     public function summery(Request $request)
     {
 
