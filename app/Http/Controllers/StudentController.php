@@ -500,11 +500,20 @@ class StudentController extends Controller
         }
         
         //Course wise student count
-        $course_wise_students = Student::select('course_id',DB::raw('count(id) as total'))
+        $ids = Marksheet::select('student_id')
+                             ->where(function($q) use ($request) {
+                             if ($request->has('year_id') and $request->year_id) {
+                                 $q->where('year_id', '=', $request->year_id);
+                                }
+                        })->get(); 
+        $query1 = Student::select('course_id',DB::raw('count(id) as total'))
                                     ->with('course')
-                                    ->groupBy('course_id')
-                                    ->get();
-
+                                    ->groupBy('course_id');
+                                    if ($request->has('year_id') and $request->year_id) {
+                                        $query1->whereIn('id',$ids);
+                                    }
+        $course_wise_students = $query1->get();
+          
         //Year wise student count
         $year_wise_students = Marksheet::select('year_id' ,DB::raw('count(student_id) as total'))
                              ->where(function($q) use ($request) {
@@ -517,10 +526,14 @@ class StudentController extends Controller
                             ->get();
 
         //Stream wise student count
-        $stream_wise_students = Student::select('stream_id',DB::raw('count(id) as total'))
+        $query2 = Student::select('stream_id',DB::raw('count(id) as total'))
                                     ->with('stream')
-                                    ->groupBy('stream_id')
-                                    ->get();
+                                    ->groupBy('stream_id');
+                                    if ($request->has('year_id') and $request->year_id) {
+                                        $query2->whereIn('id',$ids);
+                                    }
+        $stream_wise_students =$query2->get();
+         
         //year list
         $years = Year::all()->where('deleted', false);
         return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students'));
