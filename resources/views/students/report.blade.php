@@ -61,7 +61,7 @@
   </div>
   <div class="col-md-4">
       <div align="center" style="background-color: #FFF;border-radius: 5px;border: solid 1px #cccccc;">
-        <span style="font-size: 40px;color: #FF6468;">{{ $marksheets->count() }}</span><br>
+        <span style="font-size: 40px;color: #FF6468;">{{ $marksheets }}</span><br>
         <span style="font-size: 16px;color: #4D384B;">No of Marksheets</span>
       </div>
   </div>

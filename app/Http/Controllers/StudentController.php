@@ -443,7 +443,7 @@ class StudentController extends Controller
                              if ($request->has('year_id') and $request->year_id) {
                                  $q->where('year_id', '=', $request->year_id);
                                 }
-                        })->get();
+                        })->count();
         //Result wise student count
         $results = Marksheet::select('result' ,DB::raw('count(result) as total'))
                              ->where(function($q) use ($request) {
@@ -501,12 +501,15 @@ class StudentController extends Controller
         }
         
         //Course wise student count
-        $ids = Marksheet::select('student_id')
+        $ids= [];
+        if ($request->has('year_id') and $request->year_id) {
+            $ids = Marksheet::select('student_id')
                              ->where(function($q) use ($request) {
                              if ($request->has('year_id') and $request->year_id) {
                                  $q->where('year_id', '=', $request->year_id);
                                 }
                         })->get(); 
+        } 
         $query1 = Student::select('course_id',DB::raw('count(id) as total'))
                                     ->with('course')
                                     ->groupBy('course_id');
