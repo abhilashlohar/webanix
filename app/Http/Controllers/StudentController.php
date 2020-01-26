@@ -496,7 +496,7 @@ class StudentController extends Controller
 
         //Stream wise student count
         $query2 = Student::select('stream_id',DB::raw('count(id) as total'))
-                                    ->with('stream')
+                                    ->with('stream','course')
                                     ->groupBy('stream_id');
                                     if ($request->has('year_id') and $request->year_id) {
                                         $query2->whereIn('id',$ids);
