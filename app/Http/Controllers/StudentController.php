@@ -175,17 +175,17 @@ class StudentController extends Controller
         //
     }
 
-	public function importmarksheet()
+    public function importmarksheet()
     {
         $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
         return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
     }
 
-	public function savemarksheet(Request $request)
+    public function savemarksheet(Request $request)
     {
       $courseArr=[];$stremArr=[];$semArr=[];$yrArr=[];$contentArr=[];$stuArrr=[];
-	  if ($request->hasFile('marksheet_file')) {
-		    $file = $request->file('marksheet_file');
+      if ($request->hasFile('marksheet_file')) {
+            $file = $request->file('marksheet_file');
             $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
             if($ext!='csv')
@@ -194,13 +194,13 @@ class StudentController extends Controller
                      ->with('fail','This file not a csv file.Please uploade valid file.');
                 //return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
             }
-		    $name = time().'-'.$file->getClientOriginalName();
-		    $file_path = $file->getPathName();
-		  	$csv_read_file = fopen($file_path, "r");
-			$i=1;
+            $name = time().'-'.$file->getClientOriginalName();
+            $file_path = $file->getPathName();
+            $csv_read_file = fopen($file_path, "r");
+            $i=1;
             $arrCheck=[];
-			$flag=0; $stu_upd=0; $stu_ins=0; $stuArrr['insert'] = 0;  $stuArrr['update'] = 0;
-			while (($column = fgetcsv($csv_read_file, 10000, ",")) !== FALSE) {
+            $flag=0; $stu_upd=0; $stu_ins=0; $stuArrr['insert'] = 0;  $stuArrr['update'] = 0;
+            while (($column = fgetcsv($csv_read_file, 10000, ",")) !== FALSE) {
                 if($i!=1)
                 {
                    //student record
@@ -251,14 +251,14 @@ class StudentController extends Controller
                     }
                 }
 
-			$i++;
-			}
+            $i++;
+            }
 
             return view('students.importmarksheet',compact('courseArr', 'stremArr', 'yrArr', 'semArr', 'contentArr','stuArrr'));
-	  }
-	  else{
+      }
+      else{
 
-	  }
+      }
 
     }
 
@@ -416,7 +416,7 @@ class StudentController extends Controller
                         ->with('success','Data import successfully.');
     }
 
-	public function sample()
+    public function sample()
     {
       return view('students.sample');
     }
@@ -505,9 +505,8 @@ class StudentController extends Controller
          
         //year list
         $years = Year::all()->where('deleted', false);
-        return view('students.report',compact('student','marksheets','result_info','session_info','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions'));
+        return view('students.report',compact('student','marksheets','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions'));
     }
-
 
     public function summery(Request $request)
     {
