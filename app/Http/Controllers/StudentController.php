@@ -502,10 +502,15 @@ class StudentController extends Controller
                                         $query2->whereIn('id',$ids);
                                     }
         $stream_wise_students =$query2->get();
-         
+        $streams = Stream::with('course')->get();
+        $key=[];
+        foreach($streams as $stream)
+        {
+            @$key[@$stream->name]=@$stream->course->name;
+        }
         //year list
         $years = Year::all()->where('deleted', false);
-        return view('students.report',compact('student','marksheets','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions'));
+        return view('students.report',compact('student','marksheets','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions','key'));
     }
 
     public function summery(Request $request)

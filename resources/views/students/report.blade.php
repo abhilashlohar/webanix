@@ -132,7 +132,7 @@
                 <tr>
                     <td width="50%">
                         <div >
-                              <span style="font-size: 16px;color: #4D384B;">{{ $stram_stu->stream->name }}</span>
+                              <span style="font-size: 16px;color: #4D384B;">{{ @$key[@$stram_stu->stream->name].' > '.$stram_stu->stream->name }}</span>
                         </div>
                     </td>
                     <td width="50%">
