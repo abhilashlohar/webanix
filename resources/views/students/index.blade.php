@@ -124,6 +124,7 @@
                     <p>Showing total {{ $students->total() }} students</p>
                    <table class="table table-sm">
                         <tr>
+                            <th>MarkSheet Detail</th>
                             <th>Name</th>
                             <th>Enrollment No.</th>
                             <th>Father Name</th>
@@ -137,10 +138,31 @@
                         @foreach ($students as $student)
                         <tr>
                             <td>
+                                <table class="table table-boardred">
+                                    @if($student->marksheets!='')
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Semester</th>
+                                        <th>Result</th>
+                                        <th>Session</th>
+                                    </tr>
+                                    @foreach($student->marksheets as $marksheet)
+                                    <tr>
+                                        <td>{{ @$marksheet->year->name }}</td>
+                                        <td>{{ @$marksheet->semester->name }}</td>
+                                        <td>{{ @$marksheet->result }}</td>
+                                        <td>{{ @$marksheet->session }}</td>
+                                    </tr>
+                                    @endforeach
+                                    @endif
+                                </table>
+                            </td>
+                            <td>
                                 <a class="" href="{{ route('students.show',$student->id) }}">
                                     {{ $student->name }}
                                 </a>
                             </td>
+                            
                             <td>{{ $student->enrollment }}</td>
                             <td>{{ $student->father_name }}</td>
                             <td>{{ $student->mother_name }}</td>
