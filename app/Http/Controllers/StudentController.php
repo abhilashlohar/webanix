@@ -39,21 +39,21 @@ class StudentController extends Controller
         }
 
          $student_details = Student::with('course','stream');
-         if($request->year_id || $request->session || $request->semester_id)
-         {
-            $student_details->join('marksheets', function ($join)use ($request) {
-            $join->on('students.id', '=', 'marksheets.student_id');
-                if ($request->has('year_id') and $request->year_id) {
-                 $join->where('marksheets.year_id', '=', $request->year_id);
-                }
-                if ($request->has('session') and $request->session) {
-                 $join->where('marksheets.session', '=', $request->session);
-                }
-                if ($request->has('semester_id') and $request->semester_id) {
-                 $join->where('marksheets.semester_id', '=', $request->semester_id);
-                }
-            });
-         }
+         // if($request->year_id || $request->session || $request->semester_id)
+         // {
+         //    $student_details->join('marksheets', function ($join)use ($request) {
+         //    $join->on('students.id', '=', 'marksheets.student_id');
+         //        if ($request->has('year_id') and $request->year_id) {
+         //         $join->where('marksheets.year_id', '=', $request->year_id);
+         //        }
+         //        if ($request->has('session') and $request->session) {
+         //         $join->where('marksheets.session', '=', $request->session);
+         //        }
+         //        if ($request->has('semester_id') and $request->semester_id) {
+         //         $join->where('marksheets.semester_id', '=', $request->semester_id);
+         //        }
+         //    });
+         // }
          $students = $student_details->where(function($q) use ($request) {
                             if ($request->has('enrollment') and $request->enrollment) {
                                 $q->where('enrollment', 'ILIKE', '%'.$request->enrollment.'%');
@@ -77,8 +77,25 @@ class StudentController extends Controller
                                 $q->where('stream_id', '=', $request->stream_id);
                             }
                         })
-                        ->distinct('students.id')
+                        ->leftJoin('marksheets', function($join) use ($request)
+                        {
+                            $join->on('marksheets.student_id', '=', 'students.id');
+                            if($request->year_id || $request->session || $request->semester_id)
+                            {
+                                if ($request->has('year_id') and $request->year_id) {
+                                  $join->where('marksheets.year_id', '=', $request->year_id);
+                                }
+                                if ($request->has('session') and $request->session) {
+                                  $join->where('marksheets.session', '=', $request->session);
+                                }
+                                if ($request->has('semester_id') and $request->semester_id) {
+                                  $join->where('marksheets.semester_id', '=', $request->semester_id);
+                                }
+                            }
+                        })
+                        ->select('students.*', 'marksheets.year_id','marksheets.semester_id','marksheets.session','marksheets.result')
                         ->paginate(100);
+                    
 
         return view('students.index',compact('students', 'courses', 'request', 'streams','years','semesters'))
         ->with('i', (request()->input('page', 1) - 1) * 5);

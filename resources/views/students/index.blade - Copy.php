@@ -125,10 +125,6 @@
                    <table class="table table-sm">
                         <tr>
                             <th>Name</th>
-                            <th>Year</th>
-                            <th>Semester</th>
-                            <th>Result</th>
-                            <th>Session</th>
                             <th>Enrollment No.</th>
                             <th>Father Name</th>
                             <th>Mother Name</th>
@@ -137,6 +133,7 @@
                             <th>Stream</th>
                             <th>Action</th>
                         </tr>
+
                         @foreach ($students as $student)
                         <tr>
                             <td>
@@ -144,10 +141,6 @@
                                     {{ $student->name }}
                                 </a>
                             </td>
-                            <td>{{ $student->year{'name'} }}</td>
-                            <td>{{ $student->semester{'name'} }}</td>
-                            <td>{{ $student->result }}</td>
-                            <td>{{ $student->session }}</td>
                             <td>{{ $student->enrollment }}</td>
                             <td>{{ $student->father_name }}</td>
                             <td>{{ $student->mother_name }}</td>
@@ -155,7 +148,7 @@
                             <td>{{ $student->course->name }}</td>
                             <td>{{ $student->stream->name ?? '-' }}</td>
                             <td>
-                                <a class="btn btn-sm btn-light" href="">
+                                <a class="btn btn-sm btn-light" href="{{ route('students.edit',$student->id) }}">
                                       <i class="fas fa-edit"></i>
                                     </a>
                             </td>

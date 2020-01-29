@@ -62,4 +62,10 @@ class Student extends Model
     public function marksheets(){
       return $this->hasMany(Marksheet::class);
     }
+    public function year(){
+      return $this->belongsTo(Year::class);
+    }
+    public function semester(){
+      return $this->belongsTo(Semester::class);
+    }
 }
