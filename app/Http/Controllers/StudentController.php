@@ -21,39 +21,20 @@ class StudentController extends Controller
      */
     public function index(Request $request)
     {
-        $courses = Course::all()->where('deleted', false);
+        $courses = Course::orderBy('name', 'ASC')->where('deleted', false)->get();
 
-        $streams = Stream::all()->where('deleted', false)
-                            ->where('course_id', $request->course_id);
+        $streams = Stream::orderBy('name', 'ASC')->where('deleted', false)
+                            ->where('course_id', $request->course_id)
+                            ->get();
 
-        $years = Year::all()->where('deleted', false);
+        $years = Year::orderBy('name', 'ASC')->where('deleted', false)
+                 ->get();
 
-        $semesters = Semester::all()->where('deleted', false);
-        if($request->year_id)
-        {
-        $whereClause = ['course','stream','marksheets'=>function($query) use($request) {
-            $query->where('marksheets.id','=',$request->year_id);
-        }];
-        }else{
-            $whereClause=['course','stream','marksheets'];
-        }
-
+        $semesters = Semester::orderBy('name', 'ASC')->where('deleted', false)
+                     ->get();
+        
+        
          $student_details = Student::with('course','stream');
-         // if($request->year_id || $request->session || $request->semester_id)
-         // {
-         //    $student_details->join('marksheets', function ($join)use ($request) {
-         //    $join->on('students.id', '=', 'marksheets.student_id');
-         //        if ($request->has('year_id') and $request->year_id) {
-         //         $join->where('marksheets.year_id', '=', $request->year_id);
-         //        }
-         //        if ($request->has('session') and $request->session) {
-         //         $join->where('marksheets.session', '=', $request->session);
-         //        }
-         //        if ($request->has('semester_id') and $request->semester_id) {
-         //         $join->where('marksheets.semester_id', '=', $request->semester_id);
-         //        }
-         //    });
-         // }
          $students = $student_details->where(function($q) use ($request) {
                             if ($request->has('enrollment') and $request->enrollment) {
                                 $q->where('enrollment', 'ILIKE', '%'.$request->enrollment.'%');
@@ -92,11 +73,13 @@ class StudentController extends Controller
                                   $join->where('marksheets.semester_id', '=', $request->semester_id);
                                 }
                             }
+                            
                         })
                         ->select('students.*', 'marksheets.year_id','marksheets.semester_id','marksheets.session','marksheets.result')
+                        ->orderBy('students.name', 'ASC')
                         ->paginate(100);
                     
-
+        
         return view('students.index',compact('students', 'courses', 'request', 'streams','years','semesters'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
 
@@ -110,7 +93,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
+        $courses = Course::orderBy('name', 'ASC')->get();
 
         return view('students.create',compact('courses'));
     }
@@ -156,9 +139,11 @@ class StudentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Student $student)
-    {
-        $courses = Course::all();
-        $streams = Stream::where('course_id',$student->course_id)->get();
+    {   
+        $courses = Course::orderBy('name', 'ASC')->get();
+        $streams = Stream::where('course_id',$student->course_id)
+                   ->orderBy('name', 'ASC')
+                   ->get();
 
         return view('students.edit',compact('student', 'courses', 'streams'));
     }
@@ -460,7 +445,7 @@ class StudentController extends Controller
                              if ($request->has('year_id') and $request->year_id) {
                                  $q->where('year_id', '=', $request->year_id);
                                 }
-                        })->count();
+                        })->count(); 
         //Result wise student count
         $results = Marksheet::select('result' ,DB::raw('count(result) as total'))
                              ->where(function($q) use ($request) {
@@ -483,23 +468,37 @@ class StudentController extends Controller
         
         
         //Course wise student count
-        $ids= [];
-        if ($request->has('year_id') and $request->year_id) {
-            $ids = Marksheet::select('student_id')
-                             ->where(function($q) use ($request) {
-                             if ($request->has('year_id') and $request->year_id) {
-                                 $q->where('year_id', '=', $request->year_id);
-                                }
-                        })->get(); 
-        } 
-        $query1 = Student::select('course_id',DB::raw('count(id) as total'))
-                                    ->with('course')
-                                    ->groupBy('course_id');
-                                    if ($request->has('year_id') and $request->year_id) {
-                                        $query1->whereIn('id',$ids);
-                                    }
-        $course_wise_students = $query1->get();
-          
+        // $ids= [];
+        // if ($request->has('year_id') and $request->year_id) {
+        //     $ids = Marksheet::select('student_id')
+        //                      ->where(function($q) use ($request) {
+        //                      if ($request->has('year_id') and $request->year_id) {
+        //                          $q->where('year_id', '=', $request->year_id);
+        //                         }
+        //                 })->get(); 
+        // } 
+        // $query1 = Student::select('course_id',DB::raw('count(id) as total'))
+        //                             ->groupBy('course_id');
+        // if ($request->has('year_id') and $request->year_id) {
+        //     $query1->whereIn('id',$ids);
+        // }
+        // $course_wise_students = $query1->get();
+        
+         $quuery3 = Student::select('students.course_id',DB::raw('count(students.id) as total'));
+         	if ($request->has('year_id') and $request->year_id) {
+	            $quuery3->leftJoin('marksheets', function($join) use ($request){
+	             	$join->on('marksheets.student_id', '=', 'students.id');
+	            	if ($request->has('year_id') and $request->year_id) {
+	            		$join->where('marksheets.year_id', '=', $request->year_id);
+	            		$join->where('marksheets.student_id', '!=', NULL);
+	             	}
+	            });
+        	}
+            
+        $course_wise_students=  $quuery3->groupBy('students.course_id')
+            ->get();
+                    
+        //dd($course_wise_students);
         //Year wise student count
         $year_wise_students = Marksheet::select('year_id' ,DB::raw('count(student_id) as total'))
                              ->where(function($q) use ($request) {
@@ -512,22 +511,39 @@ class StudentController extends Controller
                             ->get();
 
         //Stream wise student count
-        $query2 = Student::select('stream_id',DB::raw('count(id) as total'))
-                                    ->with('stream','course')
-                                    ->groupBy('stream_id');
-                                    if ($request->has('year_id') and $request->year_id) {
-                                        $query2->whereIn('id',$ids);
-                                    }
-        $stream_wise_students =$query2->get();
+        // $query2 = Student::select('stream_id',DB::raw('count(id) as total'))
+        //                             ->with('stream','course')
+        //                             ->groupBy('stream_id');
+        //                             if ($request->has('year_id') and $request->year_id) {
+        //                                 $query2->whereIn('id',$ids);
+        //                             }
+        // $stream_wise_students =$query2->get();
+        $query2 = Student::select('students.stream_id',DB::raw('count(students.id) as total'));
+            if ($request->has('year_id') and $request->year_id) {
+	            $query2->leftJoin('marksheets', function($join) use ($request){
+	             	$join->on('marksheets.student_id', '=', 'students.id');
+	            	if ($request->has('year_id') and $request->year_id) {
+	            		$join->where('marksheets.year_id', '=', $request->year_id);
+	             	}
+	            })->where('marksheets.student_id', '!=', NULL);
+            }
+
+        $stream_wise_students = $query2->groupBy('students.stream_id')
+            ->get();
         $streams = Stream::with('course')->get();
+
         $key=[];
         foreach($streams as $stream)
         {
             @$key[@$stream->name]=@$stream->course->name;
         }
         //year list
-        $years = Year::all()->where('deleted', false);
-        return view('students.report',compact('student','marksheets','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions','key'));
+        $years = Year::orderBy('name', 'ASC')->where('deleted', false)->get();
+        if ($request->has('year_id') and $request->year_id) {
+        	$year_name = Year::all()->where('id', $request->year_id)->first();
+        
+        }else{ $year_name ='';}
+        return view('students.report',compact('student','marksheets','years','request','course_wise_students','year_wise_students','stream_wise_students','results','sessions','key','year_name'));
     }
 
     public function summery(Request $request)

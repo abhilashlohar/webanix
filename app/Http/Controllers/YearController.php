@@ -14,7 +14,9 @@ class YearController extends Controller
      */
     public function index()
     {
-        $years = Year::latest()->where('deleted', false)->paginate(5);
+        $years = Year::where('deleted', false)
+                 ->orderBy('name', 'ASC')
+                 ->paginate(5);
   
         return view('years.index',compact('years'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
