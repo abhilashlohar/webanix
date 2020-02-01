@@ -121,49 +121,50 @@
                   <a href="{{ route('students.importmarksheet') }}" class="float-right"> Import Students</a>
                 </div>
                 <div class="card-body">
-                    <p>Showing total {{ $students->total() }} students</p>
-                   <table class="table table-sm">
-                        <tr>
-                            <th>Name</th>
-                            <th>Year</th>
-                            <th>Semester</th>
-                            <th>Result</th>
-                            <th>Session</th>
-                            <th>Enrollment No.</th>
-                            <th>Father Name</th>
-                            <th>Mother Name</th>
-                            <th>DOB</th>
-                            <th>Course</th>
-                            <th>Stream</th>
-                            <th>Action</th>
-                        </tr>
-                        @foreach ($students as $student)
-                        <tr>
-                            <td>
-                                <a class="" href="{{ route('students.show',$student->id) }}">
-                                    {{ $student->name }}
-                                </a>
-                            </td>
-                            <td>{{ $student->year{'name'} }}</td>
-                            <td>{{ $student->semester{'name'} }}</td>
-                            <td>{{ $student->result }}</td>
-                            <td>{{ $student->session }}</td>
-                            <td>{{ $student->enrollment }}</td>
-                            <td>{{ $student->father_name }}</td>
-                            <td>{{ $student->mother_name }}</td>
-                            <td>{{ (date('d-m-Y', strtotime($student->dob)) != '01-01-1970') ? date('d-m-Y', strtotime($student->dob)) : "-" }}</td>
-                            <td>{{ $student->course->name }}</td>
-                            <td>{{ $student->stream->name ?? '-' }}</td>
-                            <td>
-                                <a class="btn btn-sm btn-light" href="">
-                                      <i class="fas fa-edit"></i>
+                    <div class="table-responsive">
+                        <p>Showing total {{ $students->total() }} records</p>
+                       <table class="table table-sm">
+                            <tr>
+                                <th>Name</th>
+                                <th>Enrollment No.</th>
+                                <th>Father Name</th>
+                                <th>Mother Name</th>
+                                <th>DOB</th>
+                                <th>Course</th>
+                                <th>Stream</th>
+                                <th>Year</th>
+                                <th>Semester</th>
+                                <th>Result</th>
+                                <th>Session</th>
+                                <th>Action</th>
+                            </tr>
+                            @foreach ($students as $student)
+                            <tr>
+                                <td>
+                                    <a class="" href="{{ route('students.show',$student->id) }}">
+                                        {{ $student->name }}
                                     </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </table>
-                    {!! $students->appends($_GET)->links() !!}
-
+                                </td>
+                                <td>{{ $student->enrollment }}</td>
+                                <td>{{ $student->father_name }}</td>
+                                <td>{{ $student->mother_name }}</td>
+                                <td>{{ (date('d-m-Y', strtotime($student->dob)) != '01-01-1970') ? date('d-m-Y', strtotime($student->dob)) : "-" }}</td>
+                                <td>{{ $student->course->name }}</td>
+                                <td>{{ $student->stream->name ?? '-' }}</td>
+                                <td>{{ $student->year{'name'} }}</td>
+                                <td align="center">{{ $student->semester{'name'} }}</td>
+                                <td>{{ $student->result }}</td>
+                                <td>{{ $student->session }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-light" href="{{ route('students.edit',$student->id) }}">
+                                          <i class="fas fa-edit"></i>
+                                        </a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </table>
+                        {!! $students->appends($_GET)->links() !!}
+                    </div>
                 </div>
             </div>
           </div>

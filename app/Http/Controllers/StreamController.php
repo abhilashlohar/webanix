@@ -15,7 +15,9 @@ class StreamController extends Controller
      */
     public function index()
     {
-         $streams = Stream::with('course')->paginate(5);
+         $streams = Stream::with('course')
+                    ->orderBy('name', 'ASC')
+                    ->paginate(5);
         return view('streams.index',compact('streams'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -27,7 +29,7 @@ class StreamController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
+        $courses = Course::orderBy('name', 'ASC')->get();
         return view('streams.create',compact('courses'));
     }
 
@@ -66,7 +68,7 @@ class StreamController extends Controller
      */
     public function edit(Stream $stream)
     {
-        $courses = Course::all();
+        $courses = Course::orderBy('name', 'ASC')->get();
         return view('streams.edit',compact('stream','courses'));
     }
 
@@ -110,7 +112,8 @@ class StreamController extends Controller
      */ 
     public function list(Request $request)
     {
-        $streams = Stream::latest()->where('course_id', $request->course_id)->get();
+        $streams = Stream::where('course_id', $request->course_id)
+                   ->orderBy('name', 'ASC')->get();
         return view('streams.list', compact('streams'));
     }
 }

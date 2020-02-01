@@ -22,6 +22,14 @@
 
   
   <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    
+    <style>
+    @media screen and (max-width: 700px) {
+      .sidebar {
+        display: block !important;
+      }
+    }
+    </style>
 
  </head>
 

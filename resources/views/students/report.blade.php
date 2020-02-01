@@ -53,7 +53,10 @@
 </div>
 </div>
 <div id="section-to-print" style="background-color: #FFF;padding: 10px 10px;">
-    <div style="width:100%;text-align:center;"><h3>Student Statistics</h3></div><hr/>
+    <div style="width:100%;text-align:center;">
+        <h3>Student Statistics</h3>
+        <small>showing Statistics of {{ ($request->year_id)?$year_name->name:'All' }}</small>
+    </div><hr/>
         <table class="table table-bordered">
             <tr>
                 <td width="50%" align="center">
@@ -132,7 +135,7 @@
                 <tr>
                     <td width="50%">
                         <div >
-                              <span style="font-size: 16px;color: #4D384B;">{{ @$key[@$stram_stu->stream->name].' > '.$stram_stu->stream->name }}</span>
+                              <span style="font-size: 16px;color: #4D384B;">{{ @(!empty($key[@$stram_stu->stream->name]))?$key[@$stram_stu->stream->name].' > ':''}} {{ $stram_stu->stream->name }}</span>
                         </div>
                     </td>
                     <td width="50%">

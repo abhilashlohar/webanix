@@ -14,7 +14,8 @@ class SemesterController extends Controller
      */
     public function index()
     {
-        $semesters = Semester::latest()->paginate(5);
+        $semesters = Semester::orderBy('name', 'ASC')
+                     ->paginate(5);
       
         return view('semesters.index',compact('semesters'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
